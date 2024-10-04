@@ -122,6 +122,9 @@ def main(args):
         matrix_a=matrix_a, vector_b=vector_b, method=args.method
     )
 
+    # Plot the function
+    plot_function(function, callback)
+
 
 if __name__ == "__main__":
     # Parse the arguments
