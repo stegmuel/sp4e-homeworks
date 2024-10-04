@@ -5,6 +5,16 @@ import argparse
 import matplotlib.pyplot as plt
 
 
+class MyCallback:
+    def __init__(
+        self,
+    ):
+        self.xs = []
+
+    def __call__(self, x):
+        self.xs.append(x)
+
+
 def get_parser():
     parser = argparse.ArgumentParser(description="Args parser for GMRES")
     parser.add_argument(
@@ -62,6 +72,40 @@ def minimize_gmres(function=None, matrix_a=None, vector_b=None, method="lgmres")
         )["x"],
         callback,
     )
+
+
+def plot_function(function, callback):
+    # Get the intermediate points from the callback
+    intermediate_xs = callback.xs
+    intermediate_xs = np.stack(intermediate_xs, axis=0)
+
+    # Evaluate the points at the intermediate points
+    intermediate_s_xs = function(intermediate_xs)
+
+    # Set the grid
+    xs = np.linspace(-3, 3, num=20)
+    x_grid, y_grid = np.meshgrid(xs, xs)
+    grid = np.stack([x_grid, y_grid], axis=-1)
+
+    # Compute the value of the function at each point
+    s_xs = function(grid)
+
+    # Plot the surface
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection="3d")
+    ax.plot_surface(x_grid, y_grid, s_xs, alpha=0.7)
+    ax.scatter(
+        intermediate_xs[:, 0], intermediate_xs[:, 1], intermediate_s_xs, "red", s=100
+    )
+    ax.plot(
+        intermediate_xs[:, 0],
+        intermediate_xs[:, 1],
+        intermediate_s_xs,
+        "red",
+        linewidth=5,
+    )
+    plt.show()
+
 
 def main(args):
     # Define the matrix a
