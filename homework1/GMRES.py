@@ -7,7 +7,7 @@ from numpy.linalg import norm
 from scipy.linalg import lstsq
 from typing import Tuple
 
-from optimizer import plot_function, get_minimizer, get_function, ResultsSaverCallback
+from utils import ResultsSaverCallback
 
 
 def get_parser() -> argparse.Namespace :
