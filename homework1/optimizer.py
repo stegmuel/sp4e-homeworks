@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from numpy.typing import NDArray
 from scipy.sparse.linalg import lgmres
 from scipy.optimize import minimize
-from typing import Callable, Optional, Tuple
+from typing import Callable, Tuple
 
 
 class ResultsSaverCallback(object):
@@ -82,12 +82,24 @@ def get_function(matrix_a: NDArray, vector_b: NDArray) -> Callable[[NDArray], ND
     return function
 
 
-def minimize_gmres(
-    function: Optional[Callable[[NDArray], NDArray]] = None,
-    matrix_a: Optional[NDArray] = None,
-    vector_b: Optional[NDArray] = None,
+def get_minimizer(
+    matrix_a: NDArray,
+    vector_b: NDArray,
     method: str = "lgmres",
 ) -> Tuple[NDArray, ResultsSaverCallback]:
+    """Solves linear equation Ax=b using a specified optimization method
+
+    Args:
+        matrix_a (NDArray): matrix A of dimension (n x n)
+        vector_b (NDArray): vector b of dimension (n,)
+        method (str, optional): optimization method used to solve the equation. Defaults to "lgmres".
+
+    Raises:
+        NotImplementedError: In case the method specified is not implemented by the function
+
+    Returns:
+        Tuple[NDArray, ResultsSaverCallback]: Returns the minimizer x and the intermediate steps.
+    """
     
     # Initialize starting point to origin
     x0 = np.zeros_like(vector_b, dtype=np.float32)
@@ -101,21 +113,18 @@ def minimize_gmres(
             matrix_a is not None and vector_b is not None
         ), "Matrix a vector b can not be none when using lgmres."
         return (lgmres(matrix_a, vector_b, x0=x0, callback=callback)[0], callback)
-
-    # Get the function if not provided
-    if function is None:
-        assert (
-            matrix_a is not None and vector_b is not None
-        ), "Function and matrix a & vector b can not all be none."
-        function = get_function(matrix_a=matrix_a, vector_b=vector_b)
-
-    # Minimize
-    return (
-        minimize(
-            fun=function, x0=x0, method="BFGS", callback=callback
-        ).x,
-        callback,
-    )
+    
+    elif method == "bfgs":
+        function=get_function(matrix_a=matrix_a, vector_b=vector_b)
+        return (
+            minimize(
+                fun=function, x0=x0, method="BFGS", callback=callback
+            ).x,
+            callback,
+        )
+    
+    else:
+        raise NotImplementedError(f"Optimization method {method} not implemented !")
 
 
 def plot_function(function: Callable[[NDArray], NDArray], callback: ResultsSaverCallback) -> None:
@@ -171,13 +180,14 @@ def main(args: argparse.Namespace) -> None:
     # Define the vector b
     vector_b = np.array([2, 4], dtype=np.float32)
 
-    # Get the function
-    function = get_function(matrix_a=matrix_a, vector_b=vector_b)
-
     # Minimize the function
-    minimizer, callback = minimize_gmres(
+    minimizer, callback = get_minimizer(
         matrix_a=matrix_a, vector_b=vector_b, method=args.method
     )
+    print(f"Solution x to Ax=b is: {minimizer}")
+
+    # Get the function for plotting
+    function = get_function(matrix_a=matrix_a, vector_b=vector_b)
 
     # Plot the function
     plot_function(function, callback)
