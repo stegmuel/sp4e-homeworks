@@ -1,21 +1,25 @@
+
+import argparse
 import numpy as np
+import matplotlib.pyplot as plt
+
+from numpy.typing import NDArray
 from scipy.sparse.linalg import lgmres
 from scipy.optimize import minimize
-import argparse
-import matplotlib.pyplot as plt
-from numpy.typing import NDArray
 from typing import Callable, Optional, Tuple
 
 
-class MyCallback:
+class ResultsSaverCallback(object):
     """
     Class to collect intermediate results during optimization.
+    
+    Args:
+        x0 (NDArray): Coordinates of the initial point.
     """
-
     def __init__(
-        self,
+        self, x0 : NDArray
     ):
-        self.xs = []
+        self.xs = [x0]
 
     def __call__(self, x):
         self.xs.append(x)
@@ -30,10 +34,11 @@ def get_parser() -> argparse.Namespace:
     """
     parser = argparse.ArgumentParser(description="Args parser for GMRES")
     parser.add_argument(
+        "-m",
         "--method",
         type=str,
-        choices=["lgmres", "minimize"],
-        default="minimize",
+        choices=["lgmres", "bfgs"],
+        default="bfgs",
         help="Method used to compute the minimizer.",
     )
     return parser
@@ -60,15 +65,15 @@ def get_function(matrix_a: NDArray, vector_b: NDArray) -> Callable[[NDArray], ND
             NDArray: Value the objective at input point(s).
         """
         if x.ndim == 1:
-            return np.einsum("m, m n, n -> ", x, matrix_a, x) - np.einsum(
+            return 0.5*np.einsum("m, m -> ", x, np.einsum("m n, n -> m ", matrix_a, x)) - np.einsum(
                 "m, m ->", x, vector_b
             )
         elif x.ndim == 2:
-            return np.einsum("b m, m n, b n -> b", x, matrix_a, x) - np.einsum(
+            return 0.5*np.einsum("b m, b m -> b", x,  np.einsum("m n, b n -> b m", matrix_a, x)) - np.einsum(
                 "b m, m -> b", x, vector_b
             )
         elif x.ndim == 3:
-            return np.einsum("b c m, m n, b c n -> b c", x, matrix_a, x) - np.einsum(
+            return 0.5*np.einsum("b c m, b c m -> b c", x, np.einsum("m n, b c n -> b c m", matrix_a, x)) - np.einsum(
                 "b c m, m -> b c", x, vector_b
             )
         else:
@@ -82,16 +87,20 @@ def minimize_gmres(
     matrix_a: Optional[NDArray] = None,
     vector_b: Optional[NDArray] = None,
     method: str = "lgmres",
-) -> Tuple[NDArray, MyCallback]:
+) -> Tuple[NDArray, ResultsSaverCallback]:
+    
+    # Initialize starting point to origin
+    x0 = np.zeros_like(vector_b, dtype=np.float32)
+
     # Initialize the callback
-    callback = MyCallback()
+    callback = ResultsSaverCallback(x0)
 
     # Ensure matrix a and vector b are provided when the method is lgmres
     if method == "lgmres":
         assert (
             matrix_a is not None and vector_b is not None
         ), "Matrix a vector b can not be none when using lgmres."
-        return lgmres(matrix_a, vector_b, callback=callback)
+        return (lgmres(matrix_a, vector_b, x0=x0, callback=callback)[0], callback)
 
     # Get the function if not provided
     if function is None:
@@ -103,18 +112,18 @@ def minimize_gmres(
     # Minimize
     return (
         minimize(
-            fun=function, x0=np.array([5.0, 5.0]), method="BFGS", callback=callback
-        )["x"],
+            fun=function, x0=x0, method="BFGS", callback=callback
+        ).x,
         callback,
     )
 
 
-def plot_function(function: Callable[[NDArray], NDArray], callback: MyCallback) -> None:
+def plot_function(function: Callable[[NDArray], NDArray], callback: ResultsSaverCallback) -> None:
     """Plot the function landscape and the intermediate optimization steps.
 
     Args:
         function (Callable[[NDArray], NDArray]): Functor to access the value of the objective at desired points.
-        callback (MyCallback): Object storing the intermediate optimization steps.
+        callback (ResultsSaverCallback): Object storing the intermediate optimization steps.
     """
     # Get the intermediate points from the callback
     intermediate_xs = callback.xs
@@ -124,26 +133,33 @@ def plot_function(function: Callable[[NDArray], NDArray], callback: MyCallback) 
     intermediate_s_xs = function(intermediate_xs)
 
     # Set the grid
-    xs = np.linspace(-3, 3, num=20)
+    xs = np.linspace(-3, 3, num=100)
     x_grid, y_grid = np.meshgrid(xs, xs)
     grid = np.stack([x_grid, y_grid], axis=-1)
 
     # Compute the value of the function at each point
     s_xs = function(grid)
+    s_xs = s_xs.reshape(x_grid.shape)
 
     # Plot the surface
     fig = plt.figure()
     ax = fig.add_subplot(111, projection="3d")
-    ax.plot_surface(x_grid, y_grid, s_xs, alpha=0.7)
-    ax.scatter(
-        intermediate_xs[:, 0], intermediate_xs[:, 1], intermediate_s_xs, "red", s=100
-    )
+    ax.view_init(elev=30., azim=135, roll=0)
+    ax.plot_surface(x_grid, y_grid, s_xs, alpha=0.3, cmap="viridis")
+    ax.contour3D(x_grid, y_grid, s_xs, 10, colors="black")
+    ax.set_xlabel(r'$x_1$')
+    ax.set_ylabel(r'$x_2$')
+    ax.set_zlabel(r'$s(x_1,x_2)$')
     ax.plot(
         intermediate_xs[:, 0],
         intermediate_xs[:, 1],
         intermediate_s_xs,
-        "red",
-        linewidth=5,
+        marker="o",
+        c="red",
+        linewidth=1,
+        linestyle="dashed",
+        markersize=4,
+        alpha=1.
     )
     plt.show()
 
