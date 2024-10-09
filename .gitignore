@@ -268,20 +268,6 @@ TSWLatexianTemp*
 # standalone packages
 *.sta
 
-exercises/week2/hello/sources/build/
-
-lectures/week2/code_snippets/exec
-
-exercises/week2/float/sources/build/
-
-exercises/week2/pi/sources/build/
-
-exercises/week2/hello/sources/hello
-
-exercises/week3/stl/starting_point/build/main
-
 .vscode/launch.json
-
-.vscode/pi_sin_values.csv
 
 .vscode/tasks.json
