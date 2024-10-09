@@ -181,10 +181,10 @@ def plot_function(
 
 def main(args: argparse.Namespace) -> None:
     # Define the matrix a
-    matrix_a = np.array([[8, 1], [1, 3]], dtype=np.float32)
+    matrix_a = np.array(args.A, dtype=np.float32)
 
     # Define the vector b
-    vector_b = np.array([2, 4], dtype=np.float32)
+    vector_b = np.array(args.b, dtype=np.float32)
 
     # Minimize the function
     minimizer, callback = get_minimizer(
