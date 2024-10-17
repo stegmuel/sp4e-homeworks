@@ -1,1 +1,5 @@
-add_executable(main main.cc)
+add_executable(
+main
+main.cc
+compute_arithmetic.cc
+)
