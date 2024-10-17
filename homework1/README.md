@@ -20,9 +20,9 @@ matplotlib==3.8.4
 The code is organized as follows:
 ```
 sp4e-homeworks
-│   README.md
-│   .gitignore    
 └───homework1
+    │   README.md
+    │   .gitignore    
     │   optimizer.py
     │   GMRES.py
 ```
