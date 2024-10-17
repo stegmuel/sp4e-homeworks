@@ -8,8 +8,7 @@ cmake_install.cmake
 __pycache__
 
 # VS code stuff
-.vscode/launch.json
-.vscode/tasks.json
+.vscode/
 
 # All builds dir
 */build/
