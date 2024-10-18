@@ -16,7 +16,7 @@ void PrintSeries::dump(){
         std::cout << n << " " << std::scientific << value;
         if (!std::isnan(anlt_pred)){
             double diff = fabs(anlt_pred - value);
-            std::cout << " (" << diff << ")";
+            std::cout << " " << diff;
         }
         std::cout << std::endl;
     } // end for loop

@@ -7,9 +7,11 @@ class WriteSeries : DumperSeries{
     public:
         WriteSeries(Series &series, int maxiter, int print_frequency);
         void dump() override;
+        void setSeparator(char separator);
 
     private:
         int maxiter;
         int print_frequency;
+        char separator = ' ';
 };
 #endif

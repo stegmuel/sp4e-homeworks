@@ -13,11 +13,23 @@
 int main(int argc, char **argv)
 {
     // Read arguments
-    if (argc != 2){
-        std::cerr << "missing arguments" << std::endl;
+    if (argc != 4){
+        std::cerr << "wrong number arguments" << std::endl;
         return EXIT_FAILURE;
     }
-    std::string series_name = std::string(argv[1]);
+
+    std::stringstream sstr;
+    for (int i = 1; i < argc; ++i) {
+        sstr << argv[i] << " ";
+    }
+    std::string series_name;
+    std::string pw;
+    char separator;
+
+    sstr >> series_name;
+    sstr >> pw;
+    sstr >> separator;
+
     int N = 10;
     int maxiter = 50;
     int print_frequency = 10;
@@ -37,10 +49,18 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    // PrintSeries printer = PrintSeries(*ptr_series, maxiter, print_frequency);
-    // printer.dump();
-    WriteSeries printer = WriteSeries(*ptr_series, maxiter, print_frequency);
-    printer.dump();
+    if (pw == "print"){
+        PrintSeries printer = PrintSeries(*ptr_series, maxiter, print_frequency);
+        printer.dump();
+    } else if (pw == "write"){
+        WriteSeries printer = WriteSeries(*ptr_series, maxiter, print_frequency);
+        printer.setSeparator(separator);
+        printer.dump();
+    }else{
+        std::cerr << "Options should be read or write." << std::endl;
+        return EXIT_FAILURE;
+    }
+
 
     return EXIT_SUCCESS;
 }
