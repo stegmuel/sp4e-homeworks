@@ -1,6 +1,5 @@
 #ifndef SERIES_HH
 #define  SERIES_HH
-#include <cmath>
 
 class Series
 {

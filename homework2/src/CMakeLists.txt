@@ -1,6 +1,10 @@
 add_executable(
 main
 main.cc
+series.cc
 compute_arithmetic.cc
 compute_pi.cc
+dumper_series.cc
+print_series.cc
+write_series.cc
 )

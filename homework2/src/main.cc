@@ -4,9 +4,10 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
-#include "print_series.cc"
 #include "compute_arithmetic.hh"
 #include "compute_pi.hh"
+#include "print_series.hh"
+#include "write_series.hh"
 /* -------------------------------------------------------------------------- */
 
 int main(int argc, char **argv)
@@ -36,12 +37,10 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    PrintSeries printer = PrintSeries(*ptr_series, maxiter, print_frequency);
+    // PrintSeries printer = PrintSeries(*ptr_series, maxiter, print_frequency);
+    // printer.dump();
+    WriteSeries printer = WriteSeries(*ptr_series, maxiter, print_frequency);
     printer.dump();
-    
-    // Compute the sum and print
-    // double sum = ptr_series->compute(N);
-    // std::cout << sum << std::endl;
 
     return EXIT_SUCCESS;
 }

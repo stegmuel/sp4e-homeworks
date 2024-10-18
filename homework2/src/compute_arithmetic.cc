@@ -1,4 +1,3 @@
-#include "series.cc"
 #include "compute_arithmetic.hh"
 
 
