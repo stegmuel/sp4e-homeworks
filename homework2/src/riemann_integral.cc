@@ -13,3 +13,15 @@ double RiemannIntegral::compute(unsigned int N)
     }
     return sum;
 }
+
+
+double RiemannIntegral::computeTerm(unsigned int current_index)
+{
+    return std::nan("");
+}
+
+
+double RiemannIntegral::getAnalyticPrediction()
+{
+    return std::nan("");
+}

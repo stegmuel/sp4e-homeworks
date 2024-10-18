@@ -4,9 +4,12 @@
 
 class ComputeArithmetic : public Series
 {
+protected:
+    double computeTerm(unsigned int current_index);
 public:
+    double getAnalyticPrediction();
     // ComputeArithmetic();
     // virtual ~ComputeArithmetic();
-    virtual double compute(unsigned int N);
+    // virtual double compute(unsigned int N);
 };
 #endif

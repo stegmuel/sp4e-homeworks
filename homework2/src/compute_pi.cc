@@ -1,13 +1,20 @@
 #include "compute_pi.hh"
 #include <cmath>
-
+#include "series.hh"
 
 double ComputePI::compute(unsigned int N)
 {
-    double sum = 0.0;
-    for (int i=N; i>=1; i--){
-        sum += 1. / (i * i);
-    }
-    sum = sqrt(6. * sum);
-    return sum;
+    // Call the compute method from the mother class
+    Series::compute(N);
+    return sqrt(6. * this->current_value);
+}
+
+double ComputePI::getAnalyticPrediction()
+{
+    return M_PI;
+}
+
+double ComputePI::computeTerm(unsigned int current_index)
+{
+    return 1. / (1. * current_index * current_index);
 }

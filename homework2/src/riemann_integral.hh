@@ -9,6 +9,7 @@ protected:
     double a;
     double b;
     std::function<double(double)> f;
+    double computeTerm(unsigned int current_index);
 
 public:
     RiemannIntegral(double a, double b, std::function<double(double)> f)
@@ -17,6 +18,7 @@ public:
         this->b = b;
         this->f = f;
     }
-    virtual double compute(unsigned int N);
+    double compute(unsigned int N);
+    double getAnalyticPrediction();
 };
 #endif
