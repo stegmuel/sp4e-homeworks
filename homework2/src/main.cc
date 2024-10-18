@@ -3,27 +3,45 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
+#include "print_series.cc"
 #include "compute_arithmetic.hh"
 #include "compute_pi.hh"
 /* -------------------------------------------------------------------------- */
 
 int main(int argc, char **argv)
 {
-    // Instantiate an arithmetic serie
-    ComputeArithmetic computer;
+    // Read arguments
+    if (argc != 2){
+        std::cerr << "missing arguments" << std::endl;
+        return EXIT_FAILURE;
+    }
+    std::string series_name = std::string(argv[1]);
+    int N = 10;
+    int maxiter = 50;
+    int print_frequency = 10;
 
+    // Instantiate the series asked by the user
+    Series *ptr_series;
+    if (series_name == "pi"){
+        ComputePI series;
+        ptr_series = &series;
+    }
+    else if (series_name == "arithmetic"){
+        ComputeArithmetic series;
+        ptr_series = &series;
+    }
+    else{
+        std::cerr << "Specified series not implemented " << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    PrintSeries printer = PrintSeries(*ptr_series, maxiter, print_frequency);
+    printer.dump();
+    
     // Compute the sum and print
-    double sum;
-    sum = computer.compute(10);
-    std::cout << sum << std::endl;
-
-    // Instantiate a PI serie
-    ComputePI pi_computer;
-
-    // Compute the sum and print
-    double pi;
-    pi = pi_computer.compute(1000);
-    std::cout << pi << std::endl;
+    // double sum = ptr_series->compute(N);
+    // std::cout << sum << std::endl;
 
     return EXIT_SUCCESS;
 }
