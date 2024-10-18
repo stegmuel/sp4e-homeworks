@@ -1,6 +1,7 @@
 add_executable(
 main
 main.cc
+series.cc
 compute_arithmetic.cc
 compute_pi.cc
 riemann_integral.cc
