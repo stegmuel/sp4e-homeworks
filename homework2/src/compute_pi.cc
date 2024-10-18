@@ -1,5 +1,5 @@
 #include "compute_pi.hh"
-#include <cmath>
+#include "math.h"
 
 
 double ComputePI::compute(unsigned int N)
@@ -10,4 +10,8 @@ double ComputePI::compute(unsigned int N)
     }
     sum = sqrt(6. * sum);
     return sum;
+}
+
+double ComputePI::getAnalyticPrediction(){
+    return M_PI;
 }

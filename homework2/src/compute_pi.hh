@@ -5,8 +5,7 @@
 class ComputePI : public Series
 {
 public:
-    // ComputeArithmetic();
-    // virtual ~ComputeArithmetic();
-    virtual double compute(unsigned int N);
+    double compute(unsigned int N) override;
+    double getAnalyticPrediction() override;
 };
 #endif
