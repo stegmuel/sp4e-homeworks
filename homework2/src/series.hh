@@ -9,7 +9,7 @@ protected:
     virtual double computeTerm(unsigned int current_index) = 0;
 
 public:
-    double compute(unsigned int N);
+    virtual double compute(unsigned int N);
     virtual double getAnalyticPrediction() = 0;
 };
 #endif

@@ -12,7 +12,6 @@ void Series::addTerm()
     this->current_value += this->computeTerm(this->current_index);
 }
 
-
 double Series::compute(unsigned int N)
 {
     // Check if part of the serie is already computed
@@ -29,7 +28,7 @@ double Series::compute(unsigned int N)
     }
 
     // Iterate over the remaining terms
-    for (int k = 0; k < N; k++)
+    for (int k = 1; k <= N; k++)
     {
         this->addTerm();
     }
