@@ -1,6 +1,5 @@
 #include "compute_pi.hh"
 #include <cmath>
-#include "series.hh"
 
 double ComputePI::compute(unsigned int N)
 {
