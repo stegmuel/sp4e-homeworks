@@ -8,12 +8,17 @@
 #include "compute_pi.hh"
 #include "riemann_integral.hh"
 #include <memory>
+#include <functional>
+#include <cmath>
 /* -------------------------------------------------------------------------- */
 
 int main(int argc, char **argv)
 {
     // Arguments to be parsed
     std::string serie_type;
+    std::string function = "cos";
+    float a = 0.0;
+    float b = 1.0;
 
     // Parse the arguments
     for (int i = 1; i < argc; ++i)
@@ -26,7 +31,7 @@ int main(int argc, char **argv)
             if (i + 1 < argc)
             {
                 // Check if the choice is valid
-                if (std::string(argv[i + 1]) != "pi" && std::string(argv[i + 1]) != "arithmetic")
+                if (std::string(argv[i + 1]) != "pi" && std::string(argv[i + 1]) != "arithmetic" && std::string(argv[i + 1]) != "integral")
                 {
                     std::cerr << argv[i + 1] << " is not a valid option for argument serie_type." << std::endl;
                     return EXIT_FAILURE;
@@ -57,23 +62,34 @@ int main(int argc, char **argv)
         // Instantiate a PI serie
         serie = std::make_shared<ComputePI>();
     }
-    else
+    else if (serie_type == "arithmetic")
     {
         // Instantiate an arithmetic serie
         serie = std::make_shared<ComputeArithmetic>();
+    }
+    else {
+        // Define the function
+        std::function<double(double)> f;
+        if (function == "x**3") {
+            f = [](double x) { return x * x * x; };
+        }
+        else if (function == "cos"){
+            f = [](double x) { return cos(x); };
+        }
+        else if (function == "sin"){
+            f = [](double x) { return sin(x); };
+        }
+        else{
+            std::cerr << "The function to integrate must be either of x**3, cos(x) or sin(x)." << std::endl;
+            return EXIT_FAILURE;
+        }
+        serie = std::make_shared<RiemannIntegral>(a, b, f);
     }
 
     // Compute the serie and print
     double serie_result;
     serie_result = serie->compute(10);
     std::cout << serie_result << std::endl;
-
-    // Instantiate the integrator
-    double integral;
-    RiemannIntegral integrator(0., 1., [](double x)
-                               { return x * x; });
-    integral = integrator.compute(100);
-    std::cout << "integral: " << integral << std::endl;
 
     return EXIT_SUCCESS;
 }
