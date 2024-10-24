@@ -6,4 +6,7 @@ compute_arithmetic.cc
 compute_pi.cc
 riemann_integral.cc
 parser.cc
+dumper_series.cc
+print_series.cc
+write_series.cc
 )

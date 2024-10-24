@@ -1,5 +1,5 @@
 #include "compute_pi.hh"
-#include <cmath>
+#include "math.h"
 
 double ComputePI::compute(unsigned int N)
 {

@@ -12,6 +12,9 @@
 #include <cmath>
 #include "parser.hh"
 #include <exception>
+#include <sstream>
+#include "print_series.hh"
+#include "write_series.hh"
 /* -------------------------------------------------------------------------- */
 
 ArgParser getParser()
@@ -23,6 +26,10 @@ ArgParser getParser()
     parser.addArgument("integral_f", "cubic", {"cubic", "cos", "sin"});
     parser.addArgument("integral_a", "0");
     parser.addArgument("integral_b", "1");
+    parser.addArgument("dumper_type", "write", {"write", "dump"});
+    parser.addArgument("separator_type", ",", {",", " ", "  ", "|"});
+    parser.addArgument("maxiter", "100");
+    parser.addArgument("print_frequency", "10");
 
     return parser;
 }
@@ -60,10 +67,10 @@ int main(int argc, char *argv[])
         // Parse the arguments
         parser.parse(argc, argv);
 
-        // Identify the desired class
+        // Identify the desired serie class
         std::string serie_type = parser.get("serie_type");
 
-        // Instantiate the desired class
+        // Instantiate the desired serie class
         std::shared_ptr<Series> serie = nullptr;
         if (serie_type == "pi")
         {
@@ -106,6 +113,30 @@ int main(int argc, char *argv[])
             }
             serie = std::make_shared<RiemannIntegral>(a, b, f);
         }
+
+        // Identify the desired dumper class
+        std::string dumper_type = parser.get("dumper_type");
+
+        // Instantiate the desired dumper class
+        std::shared_ptr<DumperSeries> dumper = nullptr;
+
+        // Get dumper-related arguments
+        int maxiter = std::stoi(parser.get("maxiter"));
+        int print_frequency = std::stoi(parser.get("print_frequency"));
+        std::string separator = parser.get("separator");
+
+        if (dumper_type == "print"){
+            dumper = std::make_shared<PrintSeries>(*serie, maxiter, print_frequency);
+        } else if (dumper_type == "write"){
+            dumper = std::make_shared<WriteSeries>(*serie, maxiter, print_frequency);
+            dumper->setSeparator(separator);
+        }else{
+            std::cerr << "Options should be read or write." << std::endl;
+            return EXIT_FAILURE;
+        }
+
+        // Dump the result
+        dumper->dump();
 
         // Compute the serie and print
         double serie_result;

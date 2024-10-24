@@ -8,8 +8,6 @@ protected:
     double computeTerm(unsigned int current_index) override;
 
 public:
-    // ComputeArithmetic();
-    // virtual ~ComputeArithmetic();
     double compute(unsigned int N) override;
     double getAnalyticPrediction();
 };
