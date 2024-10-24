@@ -1,4 +1,5 @@
-
+#ifndef PARSER_HH
+#define PARSER_HH
 #include <map>
 #include <string>
 
@@ -13,3 +14,4 @@ public:
     void parse(int argc, char *argv[]);
     std::string get(const std::string &name);
 };
+#endif
