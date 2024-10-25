@@ -8,7 +8,7 @@ class PrintSeries : public DumperSeries
 public:
     PrintSeries(Series &series, int maxiter, int print_frequency);
     void dump() override;
-    void setSeparator(std::string separator) override {} ;
+    void setSeparator(std::string separator) override {};
 
 private:
     int maxiter;

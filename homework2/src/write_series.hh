@@ -13,6 +13,5 @@ public:
 private:
     int maxiter;
     int print_frequency;
-    std::string separator = " ";
 };
 #endif
