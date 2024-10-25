@@ -12,3 +12,8 @@ __pycache__
 
 # All builds dir
 */build/
+
+# Generated files
+*.txt
+*.psv
+*csv
