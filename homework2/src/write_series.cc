@@ -29,4 +29,7 @@ void WriteSeries::dump()
 
     // Call the base class method
     DumperSeries::dump(f);
+
+    // Close the file
+    f.close();
 }
