@@ -33,6 +33,7 @@ ArgParser getParser()
     parser.addArgument("maxiter", "100");
     parser.addArgument("print_frequency", "10");
     parser.addArgument("precision", "6");
+    parser.addArgument("output_file", "output.txt");
 
     return parser;
 }
@@ -140,7 +141,8 @@ int main(int argc, char *argv[])
     else if (dumper_type == "write")
     {
         dumper = std::make_shared<WriteSeries>(*serie, maxiter, print_frequency);
-        ofstream = std::make_shared<std::ofstream>("test.txt");
+        dumper->setSeparator(separator);
+        ofstream = std::make_shared<std::ofstream>(parser.get("output_file"));
     }
     else
     {
@@ -150,7 +152,6 @@ int main(int argc, char *argv[])
 
     // Set the precision
     dumper->setPrecision(std::stoi(parser.get("precision")));
-    dumper->setSeparator(separator);
 
     // Dump the result
     *ofstream << *dumper;
