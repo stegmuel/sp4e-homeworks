@@ -57,7 +57,7 @@ def plot(args):
     empirical_prediction = df.iloc[:, 1]
 
     # Plot
-    plt.plot(iteration, empirical_prediction, label="Empirical", linestyle='--', color='red')
+    plt.plot(iteration, empirical_prediction, label="Empirical", linestyle='--', color='red', marker='o')
     plt.xlabel(r"$k$", fontsize=16)
     plt.ylabel(r"$S_{n}$", fontsize=16)
     handles, labels = plt.gca().get_legend_handles_labels()  # Handles for the primary y-axis
@@ -70,6 +70,10 @@ def plot(args):
 
         # Compute the error
         errors = np.abs(analytical_prediction - empirical_prediction)
+
+        # Handle the case where the error is zero
+        smallest_float = np.finfo(errors.dtype).tiny
+        errors[errors == 0.0] = smallest_float
 
         # Create a second y-axis for the errors
         ax2 = plt.gca().twinx()
