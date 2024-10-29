@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
     // Get dumper-related arguments
     int maxiter = std::stoi(parser.get("maxiter"));
     int print_frequency = std::stoi(parser.get("print_frequency"));
-    std::string separator = parser.get("separator");
+    std::string separator = parser.get("separator_type");
 
     // Set the output
     std::shared_ptr<std::ostream> ofstream = nullptr;
