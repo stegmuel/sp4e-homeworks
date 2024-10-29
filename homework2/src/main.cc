@@ -42,10 +42,12 @@ float get_bounds(const std::string bound, std::string bound_name)
 {
     if (bound == "pi")
     {
+        std::cout << "The float value of " << bound_name << " is: " << M_PI << std::endl;
         return M_PI;
     }
     else if (bound == "pi/2")
     {
+        std::cout << "The float value of " << bound_name << " is: " << M_PI / 2.0 << std::endl;
         return M_PI / 2.0;
     }
     try
