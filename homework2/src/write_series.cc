@@ -4,7 +4,8 @@
 #include <fstream>
 #include <iomanip>
 
-WriteSeries::WriteSeries(Series &series, int maxiter, int print_frequency) : DumperSeries::DumperSeries(series), maxiter(maxiter), print_frequency(print_frequency) {}
+// Constructor
+WriteSeries::WriteSeries(Series &series, int maxiter, int print_frequency) : DumperSeries(series, maxiter, print_frequency) { }
 
 void WriteSeries::setSeparator(std::string separator)
 {

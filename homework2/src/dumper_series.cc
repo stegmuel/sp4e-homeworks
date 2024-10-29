@@ -2,7 +2,8 @@
 #include <cmath>
 #include <iomanip>
 
-DumperSeries::DumperSeries(Series &series) : series(series) {};
+// Constructor
+DumperSeries::DumperSeries(Series &series, int maxiter, int print_frequency) : series(series), maxiter(maxiter), print_frequency(print_frequency) {};
 
 void DumperSeries::setPrecision(unsigned int precision)
 {

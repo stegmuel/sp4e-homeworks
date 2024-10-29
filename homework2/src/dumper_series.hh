@@ -6,7 +6,10 @@
 class DumperSeries
 {
 public:
-    DumperSeries(Series &series);
+    // Constructor
+    DumperSeries(Series &series, int maxiter, int print_frequency);
+
+    // Methods
     virtual void dump() = 0;
     virtual void dump(std::ostream &os);
     virtual void setSeparator(std::string) = 0;
@@ -14,6 +17,7 @@ public:
     virtual std::string getExtension() = 0;
 
 protected:
+    // Attributes
     int maxiter = 100;
     int print_frequency = 10;
     std::string separator = " ";

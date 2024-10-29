@@ -4,7 +4,8 @@
 #include <cmath>
 #include <iomanip>
 
-PrintSeries::PrintSeries(Series &series, int maxiter, int print_frequency) : DumperSeries::DumperSeries(series), maxiter(maxiter), print_frequency(print_frequency) {}
+// Constructor
+PrintSeries::PrintSeries(Series &series, int maxiter, int print_frequency) : DumperSeries(series, maxiter, print_frequency) {}
 
 void PrintSeries::dump()
 {
