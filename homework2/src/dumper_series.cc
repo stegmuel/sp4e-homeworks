@@ -24,12 +24,7 @@ void DumperSeries::dump(std::ostream &os)
         os << n << separator << std::scientific << value;
         if (!std::isnan(anlt_pred))
         {
-            double diff = fabs(anlt_pred - value);
-            os << separator << std::scientific << diff;
-        }
-        else
-        {
-            os << separator << nan("");
+            os << separator << std::scientific << anlt_pred;
         }
         os << std::endl;
     } // end for loop
