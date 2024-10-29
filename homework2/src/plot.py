@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import argparse
+import numpy as np
 import os
 
 
@@ -14,7 +15,7 @@ def get_parser() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Args parser for the optimization")
     parser.add_argument(
         "--value_file",
-        default="/home/thomas/Documents/phd/MATH-611/sp4e-homeworks/homework2/src/test.csv",
+        default="/home/thomas/Documents/phd/MATH-611/sp4e-homeworks/homework2/test.csv",
         type=str,
         help="Path to the file.",
     )
@@ -46,11 +47,56 @@ def plot(args):
         raise ValueError("Unsupported file extension. Use .txt, .csv, or .psv")
 
     # Load the file with the inferred separator
-    df = pd.read_csv(args.value_file, sep=separator, header=None)
+    df = pd.read_csv(args.value_file, sep=separator, header=None, index_col=False)
+
+    # Infer the output filename
+    output_file = f'{".".join(args.value_file.split(".")[:-1])}.pdf'
+
+    # Get the empirical values
+    iteration = df.iloc[:, 0]
+    empirical_prediction = df.iloc[:, 1]
 
     # Plot
-    raise NotImplementedError
-    
+    plt.plot(iteration, empirical_prediction, label="Empirical", linestyle='--', color='red')
+    plt.xlabel(r"$k$", fontsize=16)
+    plt.ylabel(r"$S_{n}$", fontsize=16)
+    handles, labels = plt.gca().get_legend_handles_labels()  # Handles for the primary y-axis
+
+    # Get the analytical values if available
+    if df.shape[-1] == 3:
+        analytical_prediction = df.iloc[:, 2]
+        plt.plot(iteration, analytical_prediction, label="Analytical", color='blue')
+        handles, labels = plt.gca().get_legend_handles_labels()  # Handles for the primary y-axis
+
+        # Compute the error
+        errors = np.abs(analytical_prediction - empirical_prediction)
+
+        # Create a second y-axis for the errors
+        ax2 = plt.gca().twinx()
+        ax2.plot(iteration, errors, label="Errors", color='green', linestyle='--')
+
+        # Set the y-axis scale to logarithmic
+        ax2.set_yscale('log')
+        
+        # Add a horizontal line at y = 1e-2
+        ax2.axhline(y=1e-2, color='orange', linestyle=':', label='Tolerance (1e-2)')
+
+        temp_handles, temp_labels = ax2.get_legend_handles_labels()  # Handles for the secondary y-axis
+        handles += temp_handles
+        labels += temp_labels
+
+        # Set the label for the second y-axis
+        ax2.set_ylabel("Errors", color='green', fontsize=16)
+
+    # Set the labels and title for the primary y-axis
+    plt.title("Empirical and analytical predictions with errors")
+
+    # Create a single legend
+    plt.legend(handles, labels)
+
+    # Save the plot
+    plt.savefig(output_file)
+
 
 if __name__ == '__main__':
     parser = get_parser()
