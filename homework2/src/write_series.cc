@@ -16,7 +16,8 @@ void WriteSeries::setSeparator(std::string separator)
     this->setExtension(separator);
 }
 
-void WriteSeries::setExtension(std::string separator){
+void WriteSeries::setExtension(std::string separator)
+{
     if (separator == ",")
     {
         this->extension = "csv";
