@@ -11,6 +11,7 @@ public:
     virtual void dump(std::ostream &os);
     virtual void setSeparator(std::string) = 0;
     virtual void setPrecision(unsigned int precision);
+    virtual std::string getExtension() = 0;
 
 protected:
     int maxiter = 100;

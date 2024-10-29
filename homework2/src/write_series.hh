@@ -9,9 +9,12 @@ public:
     WriteSeries(Series &series, int maxiter, int print_frequency);
     void dump() override;
     void setSeparator(std::string separator);
+    std::string getExtension() { return this->extension; }
 
-private:
+protected:
     int maxiter;
     int print_frequency;
+    std::string extension = "txt";
+    void setExtension(std::string separator);
 };
 #endif

@@ -9,6 +9,7 @@ public:
     PrintSeries(Series &series, int maxiter, int print_frequency);
     void dump() override;
     void setSeparator(std::string separator) override {};
+    std::string getExtension() override {return ""; };
 
 private:
     int maxiter;
