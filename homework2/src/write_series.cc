@@ -4,25 +4,34 @@
 #include <fstream>
 #include <iomanip>
 
-WriteSeries::WriteSeries(Series &series, int maxiter, int print_frequency) : DumperSeries::DumperSeries(series), maxiter(maxiter), print_frequency(print_frequency) {}
+// Constructor
+WriteSeries::WriteSeries(Series &series, int maxiter, int print_frequency) : DumperSeries(series, maxiter, print_frequency) { }
 
 void WriteSeries::setSeparator(std::string separator)
 {
+    // Set the separator
     this->separator = separator;
+
+    // Set the extension accordingly
+    this->setExtension(separator);
+}
+
+void WriteSeries::setExtension(std::string separator)
+{
+    if (separator == ",")
+    {
+        this->extension = "csv";
+    }
+    else if (separator == "|")
+    {
+        this->extension = "psv";
+    }
 }
 
 void WriteSeries::dump()
 {
     // Prepare the proper filename
-    std::string filename = "series.txt";
-    if (this->separator == ",")
-    {
-        filename = "series.csv";
-    }
-    else if (this->separator == "|")
-    {
-        filename = "series.psv";
-    }
+    std::string filename = "series." + this->extension;
 
     // Open the file
     std::ofstream f(filename);

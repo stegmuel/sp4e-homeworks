@@ -33,7 +33,7 @@ ArgParser getParser()
     parser.addArgument("maxiter", "100");
     parser.addArgument("print_frequency", "10");
     parser.addArgument("precision", "6");
-    parser.addArgument("output_file", "output.txt");
+    parser.addArgument("output_file", "output");
 
     return parser;
 }
@@ -42,10 +42,12 @@ float get_bounds(const std::string bound, std::string bound_name)
 {
     if (bound == "pi")
     {
+        std::cout << "The float value of " << bound_name << " is: " << M_PI << std::endl;
         return M_PI;
     }
     else if (bound == "pi/2")
     {
+        std::cout << "The float value of " << bound_name << " is: " << M_PI / 2.0 << std::endl;
         return M_PI / 2.0;
     }
     try
@@ -127,7 +129,7 @@ int main(int argc, char *argv[])
     // Get dumper-related arguments
     int maxiter = std::stoi(parser.get("maxiter"));
     int print_frequency = std::stoi(parser.get("print_frequency"));
-    std::string separator = parser.get("separator");
+    std::string separator = parser.get("separator_type");
 
     // Set the output
     std::shared_ptr<std::ostream> ofstream = nullptr;
@@ -141,8 +143,18 @@ int main(int argc, char *argv[])
     else if (dumper_type == "write")
     {
         dumper = std::make_shared<WriteSeries>(*serie, maxiter, print_frequency);
+        
+        // Set the separator
         dumper->setSeparator(separator);
-        ofstream = std::make_shared<std::ofstream>(parser.get("output_file"));
+
+        // Get the correct extension
+        std::string extension = dumper->getExtension();
+
+        // Infer the proper filename
+        std::string filename = parser.get("output_file") + "." + extension;
+
+        // Instantiate the stream
+        ofstream = std::make_shared<std::ofstream>(filename);
     }
     else
     {

@@ -2,7 +2,8 @@
 #include <cmath>
 #include <iomanip>
 
-DumperSeries::DumperSeries(Series &series) : series(series) {};
+// Constructor
+DumperSeries::DumperSeries(Series &series, int maxiter, int print_frequency) : series(series), maxiter(maxiter), print_frequency(print_frequency) {};
 
 void DumperSeries::setPrecision(unsigned int precision)
 {
@@ -23,12 +24,7 @@ void DumperSeries::dump(std::ostream &os)
         os << n << separator << std::scientific << value;
         if (!std::isnan(anlt_pred))
         {
-            double diff = fabs(anlt_pred - value);
-            os << separator << std::scientific << diff;
-        }
-        else
-        {
-            os << separator << nan("");
+            os << separator << std::scientific << anlt_pred;
         }
         os << std::endl;
     } // end for loop
