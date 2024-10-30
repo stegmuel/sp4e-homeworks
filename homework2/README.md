@@ -105,4 +105,19 @@ After saving results to a file, use the `plot.py` script to visualize them:
 python plot.py --value_file output_file
 ```
 
-This will generate a plot showing the series results over each iteration step.
+This will generate a plot showing the series results over each iteration step. If the analytical prediction
+is provided in the `value_file` it is also plotted along with the errors.
+
+When the analytical prediction is not provided in the `value_file` it can be provided to the python script.
+This can be used to infer the number of iterations needed to reach "convergence" (see Question 6.4):
+
+
+```bash
+python plot.py --value_file output_file --analytical_prediction analytical_prediction
+```
+
+In particular the following number of iterations are needed for the integrals:
+
+- x**3 between 0 and 1: 50
+- cos(x) between 0 and pi: 314 
+- sin(x) between 0 and pi/2: 78
