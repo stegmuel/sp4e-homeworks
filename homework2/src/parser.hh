@@ -15,7 +15,6 @@ protected:
 
 public:
     void addArgument(const std::string &name, const std::string &defaultValue, std::set<std::string> validValues = {});
-    // void addArgument(const std::string &name, const std::string &defaultValue);
     void parse(int argc, char *argv[]);
     std::string get(const std::string &name);
 };

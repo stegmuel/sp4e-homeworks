@@ -5,7 +5,7 @@
 #include <iomanip>
 
 // Constructor
-WriteSeries::WriteSeries(Series &series, int maxiter, int print_frequency) : DumperSeries(series, maxiter, print_frequency) { }
+WriteSeries::WriteSeries(Series &series, int maxiter, int print_frequency) : DumperSeries(series, maxiter, print_frequency) {}
 
 void WriteSeries::setSeparator(std::string separator)
 {

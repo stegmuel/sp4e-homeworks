@@ -5,9 +5,11 @@
 class ComputePI : public Series
 {
 protected:
+    // Methods
     double computeTerm(unsigned int current_index) override;
 
 public:
+    // Methods
     double compute(unsigned int N) override;
     double getAnalyticPrediction();
 };

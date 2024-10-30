@@ -5,12 +5,11 @@
 class ComputeArithmetic : public Series
 {
 protected:
+    // Methods
     double computeTerm(unsigned int current_index);
 
 public:
+    // Methods
     double getAnalyticPrediction();
-    // ComputeArithmetic();
-    // virtual ~ComputeArithmetic();
-    // virtual double compute(unsigned int N);
 };
 #endif

@@ -3,12 +3,16 @@
 class Series
 {
 protected:
-    unsigned int current_index;
-    double current_value;
+    // Methods
     void addTerm();
     virtual double computeTerm(unsigned int current_index) = 0;
 
+    // Attributes
+    unsigned int current_index;
+    double current_value;
+
 public:
+    // Methods
     virtual double compute(unsigned int N);
     virtual double getAnalyticPrediction() = 0;
 };
