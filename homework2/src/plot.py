@@ -19,18 +19,6 @@ def get_parser() -> argparse.Namespace:
         type=str,
         help="Path to the file.",
     )
-    parser.add_argument(
-        "--maxiter",
-        default=100,
-        type=int,
-        help="Maximum number of iterations.",
-    )
-    parser.add_argument(
-        "--print_frequency",
-        default=10,
-        type=int,
-        help="Frequency of the prints.",
-    )
     return parser
 
 
