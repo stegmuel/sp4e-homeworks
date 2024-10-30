@@ -126,8 +126,8 @@ In particular the following number of iterations are needed for the integrals:
 
 ### Complexity of the program
 
-The code is designed for computational efficiency, effectively preventing the need to recompute the entire series when producing intermediate steps. If we were to employ a heuristic approach that computes the series at every intermediate step, the time complexity would be \(O(n^2)\).
+The code is designed for computational efficiency, effectively preventing the need to recompute the entire series when producing intermediate steps. If we were to employ a heuristic approach that computes the series at every intermediate step, the time complexity would be $O(n^2)$.
 
-In contrast, this implementation utilizes a strategy where previous results are stored and reused, resulting in a significantly improved complexity of \(O(N)\).
+In contrast, this implementation utilizes a strategy where previous results are stored and reused, resulting in a significantly improved complexity of $O(N)$.
 
-Moreover, we can further minimize rounding errors in floating-point operations by summing the terms in reverse order. The optimal complexity for this approach remains \(O(N)\), particularly if the series is strictly monotonic. For instance, in the case of an increasing series like the arithmetic series, the existing code suffices. However, when estimating \(\pi\), we would need to incorporate additional code to explicitly compute the terms in reverse order.
+Moreover, we can further minimize rounding errors in floating-point operations by summing the terms in reverse order. The optimal complexity for this approach remains $O(N)$, particularly if the series is strictly monotonic. For instance, in the case of an increasing series like the arithmetic series, the existing code suffices. However, when estimating $\pi$, we would need to incorporate additional code to explicitly compute the terms in reverse order.
