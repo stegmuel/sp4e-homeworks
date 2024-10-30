@@ -19,6 +19,11 @@ def get_parser() -> argparse.Namespace:
         type=str,
         help="Path to the file.",
     )
+    parser.add_argument(
+        "--analytical_prediction",
+        default=1.0,
+        type=float,
+    )
     return parser
 
 
@@ -57,15 +62,20 @@ def plot(args):
     plt.ylabel(r"$S_{n}$", fontsize=16)
     handles, labels = (
         plt.gca().get_legend_handles_labels()
-    )  # Handles for the primary y-axis
+    )
 
     # Get the analytical values if available
-    if df.shape[-1] == 3:
-        analytical_prediction = df.iloc[:, 2]
+    if df.shape[-1] == 3 or args.analytical_prediction is not None:
+
+        if df.shape[-1] == 3:
+            analytical_prediction = df.iloc[:, 2]
+        else:
+            analytical_prediction = len(empirical_prediction) * [args.analytical_prediction]
+
         plt.plot(iteration, analytical_prediction, label="Analytical", color="blue")
         handles, labels = (
             plt.gca().get_legend_handles_labels()
-        )  # Handles for the primary y-axis
+        )
 
         # Compute the error
         errors = np.abs(analytical_prediction - empirical_prediction)
@@ -98,6 +108,9 @@ def plot(args):
 
     # Create a single legend
     plt.legend(handles, labels)
+
+    # Avoid cropping the content
+    plt.tight_layout()
 
     # Save the plot
     plt.savefig(output_file)
