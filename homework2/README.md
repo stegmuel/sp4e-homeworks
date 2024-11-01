@@ -128,17 +128,7 @@ In particular the following number of iterations are needed for the integrals:
 
 The code is designed for computational efficiency, effectively preventing the need to recompute the entire series when producing intermediate steps. If we were to employ a heuristic approach that computes the series at every intermediate step, the time complexity would be $O(n^2)$.
 
-In contrast, this implementation utilizes a strategy where previous results are stored and reused, resulting in a significantly improved complexity of $O(N)$.
+In contrast, this implementation utilizes a strategy where previous results are stored and reused, resulting in a significantly improved complexity of $O(n)$.
 
 
-%%%%%%%%%%%%%% KEEP ONE %%%%%%%%%%%%%%%%%%%
-
-Moreover, we can further minimize rounding errors in floating-point operations by summing the terms in reverse order. The optimal complexity for this approach remains $O(N)$, particularly if the series is strictly monotonic. For instance, in the case of an increasing series like the arithmetic series, the existing code suffices. However, when estimating $\pi$, we would need to incorporate additional code to explicitly compute the terms in reverse order.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Rounding errors in floating-point operations can be minimized by summing the terms in reverse order. With the current version of the implementation, calling the compute method of the series classes with decreasing N as argument would result in a complexity of $O(n^2)$. Although it is in theory possible to keep track of previously computed values and indices this approach defeats the purpose of reversing the order of the computations as it requires adding/subtracting small terms to/from "large" previously computed values.
-
-
-%%%%%%%%%%%%%% KEEP ONE %%%%%%%%%%%%%%%%%%%
+Rounding errors in floating-point operations can be minimized by summing the terms in reverse order. With the current version of the implementation, calling the compute method of the series classes with decreasing N as argument would result in a complexity of $O(n^2)$. Although it is in theory possible to keep track of previously computed values and indices, this approach defeats the purpose of reversing the order of the computations as it requires adding/subtracting small terms to/from "large" previously computed values.
