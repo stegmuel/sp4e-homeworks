@@ -14,7 +14,5 @@ __pycache__
 */build/
 
 # Generated files
-*.txt
-*.psv
-*csv
 *.pdf
+*.csv
