@@ -1,4 +1,4 @@
-## Homework 2
+## Homework 3
 
 
 #### Add googletest as a submodule
@@ -18,5 +18,3 @@ Build
 cd build
 cmake ../src
 ```
-
-

@@ -6,6 +6,7 @@ Makefile
 cmake_install.cmake
 .ipynb_checkpoints
 __pycache__
+homework3/googletest
 
 # VS code stuff
 .vscode/
@@ -14,9 +15,6 @@ __pycache__
 */build/
 
 # Generated files
-*.txt
-*.psv
-*csv
 *.pdf
 homework3/src/html/
-homework3/googletest
+*.csv
