@@ -36,12 +36,16 @@ add_library(part
 add_executable(particles main.cc)
 
 # Find FFTW library
-find_library(FFTW_LIBRARIES fftw3)
-
-if(FFTW_LIBRARIES)
-  message(STATUS "FFTW library found: ${FFTW_LIBRARIES}")
+option (USE_FFTW "Use FFTW ?" ON)
+if(USE_FFTW)
+  find_library(FFTW_LIBRARIES fftw3)
+  if(FFTW_LIBRARIES)
+    message(STATUS "FFTW library found: ${FFTW_LIBRARIES}")
+  else()
+    message(FATAL_ERROR "FFTW library not found!")
+  endif()
 else()
-  message(FATAL_ERROR "FFTW library not found!")
+  message(STATUS "Not using FFTW!")
 endif()
 
 target_link_libraries(particles gtest_main gtest pthread part ${FFTW_LIBRARIES})
