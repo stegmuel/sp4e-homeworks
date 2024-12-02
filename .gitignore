@@ -13,6 +13,8 @@ homework3/googletest
 
 # All builds dir
 */build/
+*/docs/
+*/html/
 
 # Generated files
 *.pdf
