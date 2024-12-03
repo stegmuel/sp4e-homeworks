@@ -64,13 +64,15 @@ TEST(FFT, computeFrequencies) {
   UInt N_even = 8;
   Matrix<std::complex<int>> freqs_even = FFT::computeFrequencies(N_even);
   std::vector<int> ref_even = {0, 1, 2, 3, -4, -3, -2, -1}; 
+	
+	// Normalization
+	for (auto& val : ref_even) {
+	    val /= N_even;
+	}
 
-  for (auto&& entry: index(freqs_even)){
-    int i = std::get<0>(entry);
-    int j = std::get<1>(entry);
-    auto& val = std::get<2>(entry);
-    ASSERT_EQ(val.real(), ref_even[i]);
-    ASSERT_EQ(val.imag(), ref_even[j]);
+  for (auto [i, j, value]: index(freqs_even)){
+    ASSERT_NEAR(value.real(), ref_even[i], 1e-6);
+    ASSERT_NEAR(value.imag(), ref_even[j], 1e-6);
   }
 
   // Test odd case
@@ -78,12 +80,14 @@ TEST(FFT, computeFrequencies) {
   Matrix<std::complex<int>> freqs_odd = FFT::computeFrequencies(N_odd);
   std::vector<int> ref_odd = {0, 1, 2, 3, 4, -4, -3, -2, -1}; 
 
-  for (auto&& entry: index(freqs_odd)){
-    int i = std::get<0>(entry);
-    int j = std::get<1>(entry);
-    auto& val = std::get<2>(entry);
-    ASSERT_EQ(val.real(), ref_odd[i]);
-    ASSERT_EQ(val.imag(), ref_odd[j]);
+	// Normalization
+	for (auto& val : ref_odd) {
+	    val /= N_odd;
+	}
+
+  for (auto [i, j, value]: index(freqs_odd)){
+    ASSERT_NEAR(value.real(), ref_odd[i], 1e-6);
+    ASSERT_NEAR(value.imag(), ref_odd[j], 1e-6);
   }
 }
 

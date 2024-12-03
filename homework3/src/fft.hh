@@ -63,13 +63,9 @@ inline Matrix<std::complex<int>> FFT::computeFrequencies(int size) {
   Matrix<std::complex<int>> m_out = Matrix<std::complex<int>>(size);
   int N = ((size-1)/2) + 1;
 
-  for (auto&& cell: index(m_out)){
-    UInt i = std::get<0>(cell);
-    UInt j = std::get<1>(cell);
-    std::complex<int>& value = std::get<2>(cell);
-
-    int freq_r = i < N ? i : i - size;
-    int freq_i = j < N ? j : j - size;
+  for (auto  [i, j, value]: index(m_out)){
+    int freq_r = i < N ? i / size : (i - size) / size;
+    int freq_i = j < N ? j / size: (j - size) / size;
     value.real(freq_r);
     value.imag(freq_i);
   }
