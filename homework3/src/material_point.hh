@@ -17,6 +17,9 @@ public:
 
   Real & getTemperature(){return temperature;};
   Real & getHeatRate(){return heat_rate;};
+
+  // Setters for material points attributes
+  void setHeatRate(Real heat_rate);
   
 private:
   Real temperature;

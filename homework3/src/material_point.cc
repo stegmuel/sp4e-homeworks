@@ -12,3 +12,7 @@ void MaterialPoint::initself(std::istream& sstr) {
   Particle::initself(sstr);
   sstr >> temperature  >> heat_rate;;
 }
+
+void MaterialPoint::setHeatRate(Real heat_rate){
+  this->heat_rate = heat_rate;
+}
