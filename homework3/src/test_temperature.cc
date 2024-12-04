@@ -14,7 +14,7 @@ protected:
   void SetUp() override {
     MaterialPointsFactory::getInstance();
     std::vector<MaterialPoint> material_points;
-    n_points = 9;
+    n_points = 81;
     for (UInt i = 0; i < n_points; ++i) {
       MaterialPoint p;
       p.getPosition() = i;
@@ -58,14 +58,10 @@ TEST_F(RandomMaterialPoints, sine_temperature) {
   // Set the grid attributes
   UInt grid_size = sqrt(n_points);
   Real x_min = -1.;
-  Real y_min = -1.;
   Real x_max = 1.;
-  Real y_max = 1.;
   Real x = x_min;
-  Real y = y_min;
   Real L = x_max - x_min;
   Real delta_x = L / (grid_size - 1);
-  // Real delta_y = (y_max - y_min) / (grid_size - 1);
   UInt row = 0;
   UInt col = 0;
   Real heat_rate = 0.;
@@ -78,10 +74,8 @@ TEST_F(RandomMaterialPoints, sine_temperature) {
     MaterialPoint& mp = dynamic_cast<MaterialPoint&>(p);
 
     // Infer the position of the point
-    // row = mp_counter / grid_size;
     col = mp_counter % grid_size;
-    x = x_min + col * delta_x;
-    // y = y_min + row * delta_y;
+    x = x_min + static_cast<float>(col) * delta_x;
 
     // Set the volumetric heat source
     heat_rate = (2. * M_PI / L) * (2. * M_PI / L) * sin(2. * M_PI * x / L);
@@ -95,7 +89,7 @@ TEST_F(RandomMaterialPoints, sine_temperature) {
     mp_counter += 1;
   }
 
-  // Wait until equilibrium
+  // Check that the result is stable after one step
   compute_temperature.compute(system);
 
   // Iteratr over each material point and verify that the temperature matches the analytical prediction
@@ -109,6 +103,89 @@ TEST_F(RandomMaterialPoints, sine_temperature) {
 
     // Compute the analytical prediction
     analytical_prediction = sin(2. * M_PI * x / L);
+
+    // Verify that the temperature matches the analytical prediction
+    ASSERT_NEAR(mp.getTemperature(), analytical_prediction, 1e-10);
+
+    // Update the material points counter
+    mp_counter += 1;
+  }
+}
+
+
+TEST_F(RandomMaterialPoints, twolines_temperature) {
+  // Set the grid attributes
+  UInt grid_size = sqrt(n_points);
+  Real x_min = -1.;
+  Real x_max = 1.;
+  Real x = x_min;
+  Real L = x_max - x_min;
+  Real delta_x = L / (grid_size - 1);
+  UInt row = 0;
+  UInt col = 0;
+  Real heat_rate = 0.;
+
+  // Iterate over each point and set the volumetric heat source
+  size_t mp_counter = 0;
+  Real analytical_prediction = 0.;
+  for (auto& p: system) {
+    // Get the next material point
+    MaterialPoint& mp = dynamic_cast<MaterialPoint&>(p);
+
+    // Infer the position of the point
+    col = mp_counter % grid_size;
+    x = x_min + static_cast<float>(col) * delta_x;
+
+    // Set the volumetric heat source
+    if (x == -0.5){
+      heat_rate = -1.0;
+    }
+    else if (x == 0.5){
+      heat_rate = 1.0;
+    }
+    else{
+      heat_rate = 0.0;
+    }
+    mp.setHeatRate(heat_rate);
+
+    // Set the temperature
+    if (x <= -0.5){
+      analytical_prediction = -x - 1.0;
+    }
+    else if (x > 0.5){
+      analytical_prediction = -x + 1.0;
+    }
+    else{
+      analytical_prediction = x;
+    }
+    mp.setTemperature(analytical_prediction);
+
+    // Update the material points counter
+    mp_counter += 1;
+  }
+
+  // Check that the result is stable after one step
+  compute_temperature.compute(system);
+
+  // Iteratr over each material point and verify that the temperature matches the analytical prediction
+  mp_counter = 0;
+  for (auto& p: system) {
+    MaterialPoint& mp = dynamic_cast<MaterialPoint&>(p);
+
+    // Infer the position of the point
+    col = mp_counter % grid_size;
+    x = x_min + col * delta_x;
+
+    // Compute the analytical prediction
+    if (x <= -0.5){
+      analytical_prediction = -x - 1.0;
+    }
+    else if (x > 0.5){
+      analytical_prediction = -x + 1.0;
+    }
+    else{
+      analytical_prediction = x;
+    }
 
     // Verify that the temperature matches the analytical prediction
     ASSERT_NEAR(mp.getTemperature(), analytical_prediction, 1e-10);
