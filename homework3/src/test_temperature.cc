@@ -18,7 +18,7 @@ protected:
     for (UInt i = 0; i < n_points; ++i) {
       MaterialPoint p;
       p.getPosition() = i;
-      p.getTemperature() = 1.;
+      // p.getTemperature() = 1.;
       p.getHeatRate() = 0.;
       material_points.push_back(p);
     }
@@ -40,16 +40,17 @@ TEST_F(RandomMaterialPoints, homogeneous_temperature) {
   for (auto& p: system) {
     MaterialPoint& mp = dynamic_cast<MaterialPoint&>(p);
     mp.setHeatRate(0.);
+    mp.setTemperature(1.0);
   }
 
   // Perform one step of integration
   compute_temperature.compute(system);
 
   // Verify that the temperature is unchanged
-    for (auto& p: system) {
-        MaterialPoint& mp = dynamic_cast<MaterialPoint&>(p);
-        ASSERT_NEAR(mp.getTemperature(), 1., 1e-10);
-    }
+  for (auto& p: system) {
+    MaterialPoint& mp = dynamic_cast<MaterialPoint&>(p);
+    ASSERT_NEAR(mp.getTemperature(), 1., 1e-10);
+  }
 }
 
 
@@ -71,6 +72,7 @@ TEST_F(RandomMaterialPoints, sine_temperature) {
 
   // Iterate over each point and set the volumetric heat source
   size_t mp_counter = 0;
+  Real analytical_prediction = 0.;
   for (auto& p: system) {
     // Get the next material point
     MaterialPoint& mp = dynamic_cast<MaterialPoint&>(p);
@@ -85,20 +87,19 @@ TEST_F(RandomMaterialPoints, sine_temperature) {
     heat_rate = (2. * M_PI / L) * (2. * M_PI / L) * sin(2. * M_PI * x / L);
     mp.setHeatRate(heat_rate);
 
+    // Set the temperature
+    analytical_prediction = sin(2. * M_PI * x / L);
+    mp.setTemperature(analytical_prediction);
+
     // Update the material points counter
     mp_counter += 1;
   }
 
   // Wait until equilibrium
-  for (size_t i = 0; i < 1000; i++)
-  {
-    compute_temperature.compute(system);
-  }
-  
+  compute_temperature.compute(system);
 
   // Iteratr over each material point and verify that the temperature matches the analytical prediction
   mp_counter = 0;
-  Real analytical_prediction = 0.;
   for (auto& p: system) {
     MaterialPoint& mp = dynamic_cast<MaterialPoint&>(p);
 
@@ -110,7 +111,7 @@ TEST_F(RandomMaterialPoints, sine_temperature) {
     analytical_prediction = sin(2. * M_PI * x / L);
 
     // Verify that the temperature matches the analytical prediction
-    ASSERT_NEAR(mp.getTemperature(), analytical_prediction, 1e-1);
+    ASSERT_NEAR(mp.getTemperature(), analytical_prediction, 1e-10);
 
     // Update the material points counter
     mp_counter += 1;
