@@ -20,6 +20,7 @@ public:
 
   // Setters for material points attributes
   void setHeatRate(Real heat_rate);
+  void setTemperature(Real temperature);
   
 private:
   Real temperature;

@@ -16,3 +16,8 @@ void MaterialPoint::initself(std::istream& sstr) {
 void MaterialPoint::setHeatRate(Real heat_rate){
   this->heat_rate = heat_rate;
 }
+
+
+void MaterialPoint::setTemperature(Real temperature){
+  this->temperature = temperature;
+}
