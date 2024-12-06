@@ -8,51 +8,42 @@
 
 void ComputeTemperature::compute(System& system) {
     // We assume particles are aranged in a N*N grid with N>=2
-    UInt size = sqrt(system.getNbParticles());
-    double delta = size*(system.getParticle(1).getPosition()[0] - system.getParticle(0).getPosition()[0]);
-    Matrix<complex> theta_grid(size);
-    Matrix<complex> hv_grid(size);
+    UInt grid_size = sqrt(system.getNbParticles());
+    Real delta = grid_size*(system.getParticle(1).getPosition()[0] - system.getParticle(0).getPosition()[0]);
+    Matrix<complex> theta_grid(grid_size);
+    Matrix<complex> hv_grid(grid_size);
 
     // Fill temperature and volumetric heat source grid
-    int idx = 0;
-    for (auto& part : system){
-        int i = idx % size;
-        int j = idx / size;
-        MaterialPoint& mp = dynamic_cast<MaterialPoint&>(part);
-        theta_grid(i,j).real(mp.getTemperature());
-        theta_grid(i,j).imag(0.);
-        hv_grid(i,j).real(mp.getHeatRate());
-        hv_grid(i,j).imag(0.);
-        idx += 1;
+    for (UInt j=0; j < grid_size; ++j){
+        for (UInt i=0; i < grid_size; ++i){
+            MaterialPoint& mp = dynamic_cast<MaterialPoint&>(system.getParticle(j*grid_size+i));
+            theta_grid(i,j) = mp.getTemperature();
+            hv_grid(i,j) = mp.getHeatRate();
+        }
     }
 
     // Compute fourier transforms of temperature and volumetric heat source grids
     Matrix<complex> fft_theta_grid = FFT::transform(theta_grid);
     Matrix<complex> fft_hv_grid = FFT::transform(hv_grid);
-    Matrix<std::complex<int>> fft_freqs = FFT::computeFrequencies(size);
+    Matrix<std::complex<int>> fft_freqs = FFT::computeFrequencies(grid_size);
 
     // Compute derivative of fourier theta grid
-    Real rho = 1.;
-    Real capacity = 1.;
-    Real kappa = 1.;
-    Matrix<complex> der_fft_theta_grid(size);
+    Matrix<complex> der_fft_theta_grid(grid_size);
     for (auto&& entry : index(der_fft_theta_grid)){
         int i = std::get<0>(entry);
         int j = std::get<1>(entry);
         auto& val = std::get<2>(entry);
-        val = (1./(rho*capacity))*(fft_hv_grid(i,j) - fft_theta_grid(i,j)*(pow(fft_freqs(i,j).real()/delta,2) + pow(fft_freqs(i,j).imag()/delta,2)));
+        Real q2x_q2y = Real(pow(fft_freqs(i,j).real(),2) + pow(fft_freqs(i,j).imag(),2));
+        val = fft_hv_grid(i,j) - fft_theta_grid(i,j)*(q2x_q2y)*pow(2*M_PI/delta,2);
     }
 
     // We update temperature of the system. We assume delta T is 1.
-    Real delta_t = 1.;
     Matrix<complex> der_theta_grid = FFT::itransform(der_fft_theta_grid);
-    idx = 0.;
-    for (auto& part : system){
-        int i = idx % size;
-        int j = idx / size;
-        MaterialPoint& mp = dynamic_cast<MaterialPoint&>(part);
-        mp.getTemperature() += std::real(der_theta_grid(i,j));
-        idx+=1;
+    for (UInt j=0; j < grid_size; ++j){
+        for (UInt i=0; i < grid_size; ++i){
+            MaterialPoint& mp = dynamic_cast<MaterialPoint&>(system.getParticle(j*grid_size+i));
+            mp.getTemperature() += std::real(der_theta_grid(i,j));
+        }
     }
 }
 
