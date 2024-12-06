@@ -35,9 +35,6 @@ void ComputeTemperature::compute(System& system) {
     Matrix<std::complex<int>> fft_freqs = FFT::computeFrequencies(size);
 
     // Compute derivative of fourier theta grid
-    Real rho = 1.;
-    Real capacity = 1.;
-    Real kappa = 1.;
     Matrix<complex> der_fft_theta_grid(size);
 
     for (auto  [i, j, value]: index(der_fft_theta_grid)){
@@ -54,7 +51,6 @@ void ComputeTemperature::compute(System& system) {
     }
 
     // We update temperature of the system. We assume delta T is 1.
-    Real delta_t = 1.;
     Matrix<complex> der_theta_grid = FFT::itransform(der_fft_theta_grid);
     idx = 0.;
 
