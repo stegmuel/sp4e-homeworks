@@ -12,15 +12,40 @@
 class RandomMaterialPoints : public ::testing::Test {
 protected:
   void SetUp() override {
+    // Initialize the factory of material points
     MaterialPointsFactory::getInstance();
+
+    // Instantiate a vector of points
     std::vector<MaterialPoint> material_points;
+
+    // Set the grid attributes
     n_points = 81;
-    for (UInt i = 0; i < n_points; ++i) {
-      MaterialPoint p;
-      p.getPosition() = i;
-      // p.getTemperature() = 1.;
-      p.getHeatRate() = 0.;
-      material_points.push_back(p);
+    grid_size = sqrt(n_points);
+    x_min = -1.;
+    x_max = 1.;
+    y_min = -1.;
+    y_max = 1.;
+    delta_xy = (x_max - x_min) / (grid_size - 1);
+    L = x_max - x_min;
+
+    // Instantiate all points in the grid
+    for (UInt row = 0; row < grid_size; ++row) {
+      for (UInt col = 0; col < grid_size; ++col) {
+        // Instantiate a material point
+        MaterialPoint p;
+
+        // Set x position
+        x = x_min + col * delta_xy;
+        p.getPosition()[0] = x;
+
+        // Set y position
+        y = y_max - row * delta_xy;
+        p.getPosition()[1] = y;
+
+        // p.getTemperature() = 1.;
+        // p.getHeatRate() = 0.;
+        material_points.push_back(p);
+      }
     }
 
     for (auto& p : material_points) {
@@ -31,6 +56,15 @@ protected:
 
   System system;
   UInt n_points;
+  UInt grid_size;
+  Real x_min;
+  Real x_max;
+  Real y_min;
+  Real y_max;
+  Real x;
+  Real y;
+  Real delta_xy;
+  Real L;
   ComputeTemperature compute_temperature = ComputeTemperature();
 };
 
@@ -55,27 +89,15 @@ TEST_F(RandomMaterialPoints, homogeneous_temperature) {
 
 
 TEST_F(RandomMaterialPoints, sine_temperature) {
-  // Set the grid attributes
-  UInt grid_size = sqrt(n_points);
-  Real x_min = -1.;
-  Real x_max = 1.;
-  Real x = x_min;
-  Real L = x_max - x_min;
-  Real delta_x = L / (grid_size - 1);
-  UInt row = 0;
-  UInt col = 0;
-  Real heat_rate = 0.;
-
   // Iterate over each point and set the volumetric heat source
-  size_t mp_counter = 0;
+  Real heat_rate;
   Real analytical_prediction = 0.;
   for (auto& p: system) {
     // Get the next material point
     MaterialPoint& mp = dynamic_cast<MaterialPoint&>(p);
 
-    // Infer the position of the point
-    col = mp_counter % grid_size;
-    x = x_min + static_cast<float>(col) * delta_x;
+    // Get the position of the point
+    x = mp.getPosition()[0];
 
     // Set the volumetric heat source
     heat_rate = (2. * M_PI / L) * (2. * M_PI / L) * sin(2. * M_PI * x / L);
@@ -84,57 +106,37 @@ TEST_F(RandomMaterialPoints, sine_temperature) {
     // Set the temperature
     analytical_prediction = sin(2. * M_PI * x / L);
     mp.setTemperature(analytical_prediction);
-
-    // Update the material points counter
-    mp_counter += 1;
   }
 
   // Check that the result is stable after one step
   compute_temperature.compute(system);
 
   // Iteratr over each material point and verify that the temperature matches the analytical prediction
-  mp_counter = 0;
   for (auto& p: system) {
     MaterialPoint& mp = dynamic_cast<MaterialPoint&>(p);
 
-    // Infer the position of the point
-    col = mp_counter % grid_size;
-    x = x_min + col * delta_x;
+    // Get the position of the point
+    x = mp.getPosition()[0];
 
     // Compute the analytical prediction
     analytical_prediction = sin(2. * M_PI * x / L);
 
     // Verify that the temperature matches the analytical prediction
     ASSERT_NEAR(mp.getTemperature(), analytical_prediction, 1e-10);
-
-    // Update the material points counter
-    mp_counter += 1;
   }
 }
 
 
 TEST_F(RandomMaterialPoints, twolines_temperature) {
-  // Set the grid attributes
-  UInt grid_size = sqrt(n_points);
-  Real x_min = -1.;
-  Real x_max = 1.;
-  Real x = x_min;
-  Real L = x_max - x_min;
-  Real delta_x = L / (grid_size - 1);
-  UInt row = 0;
-  UInt col = 0;
-  Real heat_rate = 0.;
-
   // Iterate over each point and set the volumetric heat source
-  size_t mp_counter = 0;
+  Real heat_rate = 0.;
   Real analytical_prediction = 0.;
   for (auto& p: system) {
     // Get the next material point
     MaterialPoint& mp = dynamic_cast<MaterialPoint&>(p);
 
-    // Infer the position of the point
-    col = mp_counter % grid_size;
-    x = x_min + static_cast<float>(col) * delta_x;
+    // Get the position of the point
+    x = mp.getPosition()[0];
 
     // Set the volumetric heat source
     if (x == -0.5){
@@ -159,22 +161,17 @@ TEST_F(RandomMaterialPoints, twolines_temperature) {
       analytical_prediction = x;
     }
     mp.setTemperature(analytical_prediction);
-
-    // Update the material points counter
-    mp_counter += 1;
   }
 
   // Check that the result is stable after one step
   compute_temperature.compute(system);
 
-  // Iteratr over each material point and verify that the temperature matches the analytical prediction
-  mp_counter = 0;
+  // Iterate over each material point and verify that the temperature matches the analytical prediction
   for (auto& p: system) {
     MaterialPoint& mp = dynamic_cast<MaterialPoint&>(p);
 
-    // Infer the position of the point
-    col = mp_counter % grid_size;
-    x = x_min + col * delta_x;
+    // Get the position of the point
+    x = mp.getPosition()[0];
 
     // Compute the analytical prediction
     if (x <= -0.5){
@@ -189,8 +186,6 @@ TEST_F(RandomMaterialPoints, twolines_temperature) {
 
     // Verify that the temperature matches the analytical prediction
     ASSERT_NEAR(mp.getTemperature(), analytical_prediction, 1e-10);
-
-    // Update the material points counter
-    mp_counter += 1;
   }
 }
+
