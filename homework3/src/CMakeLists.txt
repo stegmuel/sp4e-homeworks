@@ -1,14 +1,24 @@
 
-cmake_minimum_required (VERSION 3.1)
-project (Particles)
+cmake_minimum_required(VERSION 3.1)
+project(Particles)
 
 set(CMAKE_CXX_STANDARD 17)
 
+# Set default build type to Debug if not specified
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
+endif()
+
+# Add debug and release-specific flags
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0" CACHE STRING "Debug flags" FORCE)  # Debug symbols
+set(CMAKE_CXX_FLAGS_RELEASE "-O3" CACHE STRING "Release flags" FORCE) # High optimization for release
+
+# Export compile commands for IDE tools
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 ################################################################
 # libpart
 ################################################################
-
 
 add_library(part
   compute_boundary.cc
@@ -34,7 +44,13 @@ add_library(part
   material_points_factory.cc 
   )
 
+# Add debug flags for the library
+target_compile_options(part PRIVATE $<$<CONFIG:Debug>:-g>)
+
 add_executable(particles main.cc)
+
+# Add debug flags for the executable
+target_compile_options(particles PRIVATE $<$<CONFIG:Debug>:-g>)
 
 # Find FFTW library
 option (USE_FFTW "Use FFTW ?" ON)
@@ -69,6 +85,7 @@ Did you forget `git submodule update --init`
 ")
   message(FATAL_ERROR "exit")
 endif()
+
 ################################################################
 # Doxygen
 ################################################################
