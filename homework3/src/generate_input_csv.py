@@ -55,7 +55,7 @@ def main(args):
     )
 
     # Save as CSV
-    np.savetxt(args.savepath, rows, delimiter=",", fmt="%f")
+    np.savetxt(args.savepath, rows, delimiter=" ")
 
 
 if __name__ == "__main__":
