@@ -48,10 +48,14 @@ protected:
       }
     }
 
+    // Add material points to the system
     for (auto& p : material_points) {
       // std::cout << p << std::endl;
       system.addParticle(std::make_shared<MaterialPoint>(p));
     }
+
+    // Compute with rho, capacity, kappa and delta_t set
+    compute_temperature = std::make_shared<ComputeTemperature>(1.0, 1.0, 1.0, 1.0);
   }
 
   System system;
@@ -65,7 +69,8 @@ protected:
   Real y;
   Real delta_xy;
   Real L;
-  ComputeTemperature compute_temperature = ComputeTemperature();
+  // ComputeTemperature compute_temperature = ComputeTemperature();
+  std::shared_ptr<ComputeTemperature> compute_temperature;
 };
 
 
@@ -78,7 +83,7 @@ TEST_F(RandomMaterialPoints, homogeneous_temperature) {
   }
 
   // Perform one step of integration
-  compute_temperature.compute(system);
+  compute_temperature->compute(system);
 
   // Verify that the temperature is unchanged
   for (auto& p: system) {
@@ -109,7 +114,7 @@ TEST_F(RandomMaterialPoints, sine_temperature) {
   }
 
   // Check that the result is stable after one step
-  compute_temperature.compute(system);
+  compute_temperature->compute(system);
 
   // Iteratr over each material point and verify that the temperature matches the analytical prediction
   for (auto& p: system) {
@@ -172,7 +177,7 @@ TEST_F(RandomMaterialPoints, two_lines_temperature) {
   }
 
   // Check that the result is stable after one step
-  compute_temperature.compute(system);
+  compute_temperature->compute(system);
 
   // Iterate over each material point and verify that the temperature matches the analytical prediction
   for (auto& p: system) {
