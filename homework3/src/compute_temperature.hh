@@ -9,6 +9,10 @@ class ComputeTemperature : public Compute {
 
   // Virtual implementation
 public:
+  // Constructor with args
+  ComputeTemperature(Real rho_val, Real capacity_val, Real kappa_val, Real delta_t_val) : 
+    rho(rho_val), capacity(capacity_val), kappa(kappa_val), delta_t(delta_t_val) {}
+
   //! Penalty contact implementation
   void compute(System& system) override;
 
