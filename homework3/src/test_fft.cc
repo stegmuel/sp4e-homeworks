@@ -21,8 +21,6 @@ TEST(FFT, transform) {
     int i = std::get<0>(entry);
     int j = std::get<1>(entry);
     auto& val = std::get<2>(entry);
-    if (std::abs(val) > 1e-10)
-      std::cout << i << "," << j << " = " << val << std::endl;
 
     if (i == 1 && j == 0)
       ASSERT_NEAR(std::abs(val), N * N / 2, 1e-10);
@@ -65,11 +63,6 @@ TEST(FFT, computeFrequencies) {
   Matrix<std::complex<int>> freqs_even = FFT::computeFrequencies(N_even);
   std::vector<int> ref_even = {0, 1, 2, 3, -4, -3, -2, -1}; 
 	
-	// Normalization
-	for (auto& val : ref_even) {
-	    val /= N_even;
-	}
-
   for (auto [i, j, value]: index(freqs_even)){
     ASSERT_NEAR(value.real(), ref_even[i], 1e-6);
     ASSERT_NEAR(value.imag(), ref_even[j], 1e-6);
@@ -80,15 +73,9 @@ TEST(FFT, computeFrequencies) {
   Matrix<std::complex<int>> freqs_odd = FFT::computeFrequencies(N_odd);
   std::vector<int> ref_odd = {0, 1, 2, 3, 4, -4, -3, -2, -1}; 
 
-	// Normalization
-	for (auto& val : ref_odd) {
-	    val /= N_odd;
-	}
-
   for (auto [i, j, value]: index(freqs_odd)){
     ASSERT_NEAR(value.real(), ref_odd[i], 1e-6);
     ASSERT_NEAR(value.imag(), ref_odd[j], 1e-6);
   }
 }
-
 /*****************************************************************/
