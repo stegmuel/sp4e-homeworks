@@ -25,8 +25,8 @@ protected:
     x_max = 1.;
     y_min = -1.;
     y_max = 1.;
-    delta_xy = (x_max - x_min) / (grid_size - 1);
     L = x_max - x_min;
+    delta_xy = L / (grid_size);
 
     // Instantiate all points in the grid
     for (UInt row = 0; row < grid_size; ++row) {
@@ -127,7 +127,7 @@ TEST_F(RandomMaterialPoints, sine_temperature) {
 }
 
 
-TEST_F(RandomMaterialPoints, twolines_temperature) {
+TEST_F(RandomMaterialPoints, two_lines_temperature) {
   // Iterate over each point and set the volumetric heat source
   Real heat_rate = 0.;
   Real analytical_prediction = 0.;
@@ -137,6 +137,14 @@ TEST_F(RandomMaterialPoints, twolines_temperature) {
 
     // Get the position of the point
     x = mp.getPosition()[0];
+    y = mp.getPosition()[1];
+
+    // Set the boundary conditions
+    if (x == x_min || x == x_max || y == y_min || y == y_max){
+        mp.getBoundary() = true;
+    } else{
+        mp.getBoundary() = true;
+    }
 
     // Set the volumetric heat source
     if (x == -0.5){
@@ -188,4 +196,3 @@ TEST_F(RandomMaterialPoints, twolines_temperature) {
     ASSERT_NEAR(mp.getTemperature(), analytical_prediction, 1e-10);
   }
 }
-
