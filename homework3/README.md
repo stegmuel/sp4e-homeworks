@@ -17,4 +17,24 @@ Build
 ```
 cd build
 cmake ../src
+make
 ```
+
+Test the FFT (TODO:update)
+```
+./test_fft
+```
+
+
+Test the temperature (TODO:update)
+
+```
+./test_temperature
+```
+
+Launch a simulation (TODO:update)
+
+```
+./particles 10 1 ../data/radial_heat_distribution.csv material_point 0.1 
+```
+
