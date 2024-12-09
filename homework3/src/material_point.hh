@@ -17,6 +17,7 @@ public:
 
   Real & getTemperature(){return temperature;};
   Real & getHeatRate(){return heat_rate;};
+  bool & getBoundary(){return is_boundary;};
 
   // Setters for material points attributes
   void setHeatRate(Real heat_rate);
@@ -25,6 +26,7 @@ public:
 private:
   Real temperature;
   Real heat_rate;
+  bool is_boundary;
 };
 
 /* -------------------------------------------------------------------------- */

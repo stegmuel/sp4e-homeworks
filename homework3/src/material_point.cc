@@ -3,14 +3,14 @@
 /* -------------------------------------------------------------------------- */
 void MaterialPoint::printself(std::ostream& stream) const {
   Particle::printself(stream);
-  stream << " " << temperature << " " << heat_rate;
+  stream << " " << temperature << " " << heat_rate << " " << is_boundary;
 }
 
 /* -------------------------------------------------------------------------- */
 
 void MaterialPoint::initself(std::istream& sstr) {
   Particle::initself(sstr);
-  sstr >> temperature  >> heat_rate;;
+  sstr >> temperature  >> heat_rate >> is_boundary;
 }
 
 void MaterialPoint::setHeatRate(Real heat_rate){
