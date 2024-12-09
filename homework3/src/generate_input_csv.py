@@ -38,7 +38,7 @@ def main(args):
     position = np.stack([xv, yv, zv], axis=-1).reshape(-1, 3)
     velocity = np.zeros_like(position)
     force = np.zeros_like(position)
-    mass = np.ones_like(position[:, :1])
+    mass = 1e9 * np.ones_like(position[:, :1])
     temperature = np.zeros_like(mass)
 
     # Create boundary conditions and flatten
