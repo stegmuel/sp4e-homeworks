@@ -41,9 +41,17 @@ def main(args):
     mass = np.ones_like(position[:, :1])
     temperature = np.zeros_like(mass)
 
+    # Create boundary conditions and flatten
+    boundary = np.zeros_like(xv)
+    boundary[:, 0] = 1.
+    boundary[:, -1] = 1.
+    boundary[0, :] = 1.
+    boundary[-1, :] = 1.
+    boundary = boundary.reshape(-1, 1)
+
     # Stack everything to obtain rows
     rows = np.concatenate(
-        [position, velocity, force, mass, temperature, heat_rate], axis=-1
+        [position, velocity, force, mass, temperature, heat_rate, boundary], axis=-1
     )
 
     # Save as CSV
