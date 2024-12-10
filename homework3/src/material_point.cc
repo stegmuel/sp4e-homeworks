@@ -3,7 +3,7 @@
 /* -------------------------------------------------------------------------- */
 void MaterialPoint::printself(std::ostream& stream) const {
   Particle::printself(stream);
-  stream << " " << temperature << " " << heat_rate << " " << is_boundary;
+  stream << " " << temperature << " " << heat_rate;
 }
 
 /* -------------------------------------------------------------------------- */
