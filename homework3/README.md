@@ -1,15 +1,22 @@
-## Homework 3
+# Homework 3
 
 
 **Authors:** Guillaume Vray, Thomas Stegmüller
 
-### Exercise 1: Code discovery
+## Requirements
+### Python
+The required libraries can be installed with
+```
+pip install -r requirements.txt
+```
+### C++
 
+- CMake: Version 3.1 or newer.
+- C++ Compiler: A C++17-compatible compiler is required.
+- FFTW (```sudo apt install libfftw3-dev```)
 
-### Exercise 2:
-
-
-#### Add googletest as a submodule
+### Submodule(s)
+```googletest``` can be added as a submodule with the following instructions.
 ```
 git submodule add https://github.com/google/googletest.git googletest
 git submodule update --init --recursive
@@ -20,6 +27,13 @@ Then symlink the ```googletest``` folder.
 cd homework3
 ln -s ../googletest googletest
 ```
+
+## Exercise 1: Code discovery
+
+
+## Exercise 2:
+
+
 
 Build
 ```
