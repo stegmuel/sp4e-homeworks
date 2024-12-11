@@ -9,7 +9,7 @@
 void ComputeTemperature::compute(System& system) {
     // We assume particles are aranged in a N*N grid with N>=2
     UInt grid_size = sqrt(system.getNbParticles());
-    Real delta = grid_size * (system.getParticle(1).getPosition()[0] - system.getParticle(0).getPosition()[0]);
+    Real delta = std::abs(system.getParticle(1).getPosition()[0] - system.getParticle(0).getPosition()[0]);
     Matrix<complex> theta_grid(grid_size);
     Matrix<complex> hv_grid(grid_size);
 
@@ -29,15 +29,15 @@ void ComputeTemperature::compute(System& system) {
 
     // Compute derivative of fourier theta grid
     Real factor = 1.0 / rho / capacity;
-    Real qx, qy;
+    Real qx2, qy2;
     Matrix<complex> der_fft_theta_grid(grid_size);
     for (auto&& entry : index(der_fft_theta_grid)){
         int i = std::get<0>(entry);
         int j = std::get<1>(entry);
         auto& val = std::get<2>(entry);
-        qx = pow(fft_freqs(i,j).real() * 2 * M_PI / delta, 2);
-        qy = pow(fft_freqs(i,j).imag() * 2 * M_PI / delta, 2);
-        val = factor * (fft_hv_grid(i,j) - kappa * fft_theta_grid(i,j) * (qx + qy));
+        qx2 = pow(2*M_PI*fft_freqs(i,j).real()/(delta*grid_size), 2);
+        qy2 = pow(2*M_PI*fft_freqs(i,j).imag()/(delta*grid_size), 2);
+        val = factor * (fft_hv_grid(i,j) - kappa * fft_theta_grid(i,j) * (qx2 + qy2));
     }
 
     // We update temperature of the system. We assume delta T is 1.

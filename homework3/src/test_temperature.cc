@@ -19,14 +19,13 @@ protected:
     std::vector<MaterialPoint> material_points;
 
     // Set the grid attributes
-    n_points = 81;
-    grid_size = sqrt(n_points);
+    grid_size = 512;
     x_min = -1.;
     x_max = 1.;
     y_min = -1.;
     y_max = 1.;
     L = x_max - x_min;
-    delta_xy = L / (grid_size);
+    delta_xy = L / grid_size;
 
     // Instantiate all points in the grid
     for (UInt row = 0; row < grid_size; ++row) {
@@ -39,27 +38,34 @@ protected:
         p.getPosition()[0] = x;
 
         // Set y position
-        y = y_max - row * delta_xy;
+        y = y_min + row * delta_xy;
         p.getPosition()[1] = y;
 
-        // p.getTemperature() = 1.;
-        // p.getHeatRate() = 0.;
+        p.getTemperature() = 1.;
+        p.getHeatRate() = 0.;
+        p.getMass() = 1.;
+
+        if ((col == grid_size-1) || (row == grid_size-1) || (col == 0) || (row == 0)){
+          p.getBoundary() = true;
+        }else{
+          p.getBoundary() = false;
+        }
+
         material_points.push_back(p);
       }
     }
 
     // Add material points to the system
     for (auto& p : material_points) {
-      // std::cout << p << std::endl;
       system.addParticle(std::make_shared<MaterialPoint>(p));
     }
 
     // Compute with rho, capacity, kappa and delta_t set
     compute_temperature = std::make_shared<ComputeTemperature>(1.0, 1.0, 1.0, 1.0);
+
   }
 
   System system;
-  UInt n_points;
   UInt grid_size;
   Real x_min;
   Real x_max;
@@ -144,13 +150,6 @@ TEST_F(RandomMaterialPoints, two_lines_temperature) {
     x = mp.getPosition()[0];
     y = mp.getPosition()[1];
 
-    // Set the boundary conditions
-    if (x == x_min || x == x_max || y == y_min || y == y_max){
-        mp.getBoundary() = true;
-    } else{
-        mp.getBoundary() = true;
-    }
-
     // Set the volumetric heat source
     if (x == -0.5){
       heat_rate = -1.0;
@@ -164,11 +163,11 @@ TEST_F(RandomMaterialPoints, two_lines_temperature) {
     mp.setHeatRate(heat_rate);
 
     // Set the temperature
-    if (x <= -0.5){
-      analytical_prediction = -x - 1.0;
+    if (x < -0.5){
+      analytical_prediction = -x-1.;
     }
     else if (x > 0.5){
-      analytical_prediction = -x + 1.0;
+      analytical_prediction = -x+1.;
     }
     else{
       analytical_prediction = x;
