@@ -28,19 +28,26 @@ cd homework3
 ln -s ../googletest googletest
 ```
 
-## Exercise 1: Code discovery
 
-
-## Exercise 2:
-
-
-
-Build
+## Building the project
 ```
-cd build
+cd homework3/build
 cmake ../src
 make
 ```
+
+## Exercise 1
+The particles are organized as follows.
+
+- ```MaterialPoint```, ```Planet``` and ```PingPongBall``` inherit from the class ```Particle``` 
+- ```MaterialPointFactory```, ```PlanetFactory``` and ```PingPongBallFactory``` inherit from the class ```ParticleFactoryInterface``` 
+- ```ParticleFactoryInterface``` is an interface and cannot be instantiated. The remaining factory classes are implemented as singletons, implying that only a single factory can be instantiated.
+- The factories are responsible for the creation of the particles.
+- The creation of particles is typically triggered by the class ```CsvReader```which parses an input csv file and adds particle to the system.
+- The system stores pointer to the particles in a vector. The particles are "owned" by the system and can be accessed via their index in the vector.
+- The factories are responsible for the creation of simulations via the class ```SystemEvolution``` which stores a pointer to the system and pointers to ```Compute``` subclasses.
+
+
 
 ### Exercise 3:
 
