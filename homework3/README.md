@@ -80,7 +80,7 @@ cd src/
 python generate_input_csv.py \
   --savepath ../data/radial_heat_distribution.csv \
   --n_points_per_side 512 \
-  --radius 0.1 \
+  --radius 0.5 \
   --x_min -1.0 \
   --x_max 1.0 \
   --y_min -1.0 \
@@ -88,9 +88,15 @@ python generate_input_csv.py \
 ```
 To handle the boundary conditions, we add a boolean flag to the particle attributes. This flag is added as an extra column in the ```.csv``` file and then parsed by the ```initself``` function from the ```MaterialPoint``` class. We add a condition in ```ComputeTemperature::compute``` to prevent the update of boundary particles' state.
 
-Launch a simulation(TODO:update):
+
+### Launching a simulation
+
+Given the input ```.csv``` file generated as above described, one can launch a simulation with the following command:
 
 ```
-./particles 10 1 ../data/radial_heat_distribution.csv material_point 0.1 
+cd /homework3/build/
+mkdir -p dumps
+./particles 10 1 ../data/radial_heat_distribution.csv material_point 0.001 
 ```
+This will produce output ```.csv``` files in ```homework3/build/dumps/``` that can be used as input in Paraview.
 
