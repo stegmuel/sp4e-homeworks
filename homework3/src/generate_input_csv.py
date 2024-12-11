@@ -6,11 +6,11 @@ def get_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--savepath",
-        default="homework3/data/radial_heat_distribution.csv",
+        default="../data/radial_heat_distribution.csv",
         type=str,
         help="Where to save the generated .csv file",
     )
-    parser.add_argument("--n_points_per_side", default=11, type=float)
+    parser.add_argument("--n_points_per_side", default=512, type=int)
     parser.add_argument("--radius", default=0.1, type=float)
     parser.add_argument("--x_min", default=-1.0, type=float)
     parser.add_argument("--x_max", default=1.0, type=float)
