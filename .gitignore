@@ -20,3 +20,7 @@ homework3/googletest
 *.pdf
 homework3/src/html/
 *.csv
+
+# Homework4
+homework4/eigen/
+homework4/googletest
