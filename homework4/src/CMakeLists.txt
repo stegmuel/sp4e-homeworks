@@ -11,6 +11,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
 
 find_package(FFTW)
 
+
 ################################################################
 # libpart
 ################################################################
@@ -40,11 +41,12 @@ add_library(part SHARED
   material_points_factory.cc 
   )
 
-if(EXISTS "${PROJECT_SOURCE_DIR}/eigen/CMakeLists.txt")
-  include_directories(${PROJECT_SOURCE_DIR}/eigen)  
+if(EXISTS "${PROJECT_SOURCE_DIR}/../eigen/CMakeLists.txt")
+  include_directories(${PROJECT_SOURCE_DIR}/../eigen)  
 else()
   message("
 *********************************************
+${PROJECT_SOURCE_DIR}/eigen/CMakeLists.txt
 eigen is missing. 
 Did you forget `git submodule update --init`
 *********************************************
@@ -52,8 +54,9 @@ Did you forget `git submodule update --init`
   message(FATAL_ERROR "exit")
 endif()
 
-if(EXISTS "${PROJECT_SOURCE_DIR}/googletest/CMakeLists.txt")
-  add_subdirectory(googletest)
+if(EXISTS "${PROJECT_SOURCE_DIR}/../googletest/CMakeLists.txt")
+  add_subdirectory(${PROJECT_SOURCE_DIR}/../googletest googletest)
+  # add_subdirectory(googletest)
   add_executable(test_kepler test_kepler.cc)
   add_executable(test_fft test_fft.cc)
   add_executable(test_finite_diff test_finite_diff.cc)
