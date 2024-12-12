@@ -5,10 +5,7 @@
 
 Eigen
 ```
-cd homework4
-wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
-tar -xvzf eigen-3.4.0.tar.gz
-mv eigen-3.4.0 eigen
+sudo apt-get install libeigen3-dev
 ```
 
 ```
@@ -29,5 +26,5 @@ make
 Launch the test
 ``` 
 cd homework4/build
- ./test_finite_diff
+./test_finite_diff
 ```

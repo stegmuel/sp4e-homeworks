@@ -41,18 +41,18 @@ add_library(part SHARED
   material_points_factory.cc 
   )
 
-if(EXISTS "${PROJECT_SOURCE_DIR}/../eigen/CMakeLists.txt")
-  include_directories(${PROJECT_SOURCE_DIR}/../eigen)  
-else()
-  message("
-*********************************************
-${PROJECT_SOURCE_DIR}/eigen/CMakeLists.txt
-eigen is missing. 
-Did you forget `git submodule update --init`
-*********************************************
-")
-  message(FATAL_ERROR "exit")
-endif()
+# if(EXISTS "${PROJECT_SOURCE_DIR}/eigen/CMakeLists.txt")
+#   include_directories(${PROJECT_SOURCE_DIR}/eigen/)  
+#   message("${PROJECT_SOURCE_DIR}/eigen")
+# else()
+#   message("
+# *********************************************
+# eigen is missing. 
+# Did you forget `git submodule update --init`
+# *********************************************
+# ")
+#   message(FATAL_ERROR "exit")
+# endif()
 
 if(EXISTS "${PROJECT_SOURCE_DIR}/../googletest/CMakeLists.txt")
   add_subdirectory(${PROJECT_SOURCE_DIR}/../googletest googletest)
