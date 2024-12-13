@@ -9,7 +9,20 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
 # FFTW
 ################################################################
 
-find_package(FFTW)
+# find_package(FFTW)
+
+# Find FFTW library
+option (USE_FFTW "Use FFTW ?" ON)
+if(USE_FFTW)
+  find_library(FFTW_LIBRARIES fftw3)
+  if(FFTW_LIBRARIES)
+    message(STATUS "FFTW library found: ${FFTW_LIBRARIES}")
+  else()
+    message(FATAL_ERROR "FFTW library not found!")
+  endif()
+else()
+  message(STATUS "Not using FFTW!")
+endif()
 
 
 ################################################################
@@ -101,10 +114,11 @@ endif(DOXYGEN_FOUND)
 # Pybind
 ################################################################
 
-option (USE_PYTHON "Use pybind library" OFF) 
+option (USE_PYTHON "Use pybind library" ON) 
 
 if (USE_PYTHON)
 add_subdirectory(pybind11)
+# add_subdirectory(${PROJECT_SOURCE_DIR}/pybind11)
 
 add_library(pypart MODULE pypart.cc)
 target_link_libraries(pypart PRIVATE pybind11::module part)
