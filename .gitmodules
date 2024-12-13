@@ -1,3 +1,9 @@
 [submodule "googletest"]
 	path = googletest
 	url = https://github.com/google/googletest
+[submodule "homework4/src/pybind11"]
+	path = homework4/src/pybind11
+	url = https://github.com/pybind/pybind11.git
+[submodule "homework4/src/eigen"]
+	path = homework4/src/eigen
+	url = https://gitlab.com/libeigen/eigen.git
