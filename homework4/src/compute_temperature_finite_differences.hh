@@ -2,10 +2,10 @@
 #define COMPUTE_TEMPERATURE_FINITE_DIFFERENCES_HH
 
 #include "compute.hh"
-// #include <Eigen/SparseCore>
-// #include <Eigen/SparseLU>
-#include <eigen3/Eigen/SparseCore>
-#include <eigen3/Eigen/SparseLU>
+#include <Eigen/SparseCore>
+#include <Eigen/SparseLU>
+// #include <eigen3/Eigen/SparseCore>
+// #include <eigen3/Eigen/SparseLU>
 
 class ComputeTemperatureFiniteDifferences : public Compute {
 public:

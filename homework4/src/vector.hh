@@ -3,8 +3,8 @@
 
 /* -------------------------------------------------------------------------- */
 #include "my_types.hh"
-// #include <Eigen/Dense>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
+// #include <eigen3/Eigen/Dense>
 /* -------------------------------------------------------------------------- */
 
 /// Alias type to Eigen 3D vector

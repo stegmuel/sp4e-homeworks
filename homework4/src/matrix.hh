@@ -2,8 +2,8 @@
 #define MATRIX_HH
 /* ------------------------------------------------------ */
 #include "my_types.hh"
-// #include <Eigen/Dense>
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
+// #include <eigen3/Eigen/Dense>
 #include <algorithm>
 #include <array>
 #include <tuple>
