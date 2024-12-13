@@ -14,5 +14,30 @@ PYBIND11_MODULE(pypart, m) {
 
   m.doc() = "pybind of the Particles project";
 
-  // bind the routines here
+	////////////// Factories ///////////////////
+  // ParticlesFactoryInterface
+  py::class_<ParticlesFactoryInterface>(
+      m, "ParticlesFactoryInterface",
+      py::dynamic_attr() // to allow new members to be created dynamically
+  );
+	 
+  // MaterialPointsFactory
+  py::class_<MaterialPointsFactory>(
+      m, "MaterialPointsFactory",
+      py::dynamic_attr() // to allow new members to be created dynamically
+  );
+
+  // PingPongBallsFactory
+  py::class_<PingPongBallsFactory>(
+      m, "PingPongBallsFactory",
+      py::dynamic_attr() // to allow new members to be created dynamically
+  );
+
+  // PlanetsFactory
+  py::class_<PlanetsFactory>(
+      m, "PlanetsFactory",
+      py::dynamic_attr() // to allow new members to be created dynamically
+  );
+
+	////////////// CSV ///////////////////
 }
