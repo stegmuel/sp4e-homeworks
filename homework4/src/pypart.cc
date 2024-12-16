@@ -52,7 +52,11 @@ PYBIND11_MODULE(pypart, m) {
   py::class_<MaterialPointsFactory, ParticlesFactoryInterface>(
       m, "MaterialPointsFactory",
       py::dynamic_attr() // to allow new members to be created dynamically
-  );
+  )
+  // Expose the static getInstance() method
+  .def_static("getInstance", &MaterialPointsFactory::getInstance,
+      py::return_value_policy::reference,
+      "Get the singleton instance of PlanetsFactory.");
 
   // PingPongBallsFactory
   py::class_<PingPongBallsFactory, ParticlesFactoryInterface>(
@@ -82,8 +86,7 @@ PYBIND11_MODULE(pypart, m) {
        "Constructor for CsvWriter.")
   .def("write", &CsvWriter::write,
       py::arg("system"),
-      "Writes the state of the given system to the CSV file.")
-  ;
+      "Writes the state of the given system to the CSV file.");
 
 	////////////// Computes ///////////////////
   // Compute
@@ -102,7 +105,40 @@ PYBIND11_MODULE(pypart, m) {
   py::class_<ComputeTemperature, Compute, std::shared_ptr<ComputeTemperature>>(
       m, "ComputeTemperature",
       py::dynamic_attr() // to allow new members to be created dynamically
-  );
+  )
+  // Constructor
+	.def(py::init<>(), "Constructor for ComputeTemperature")
+  // Setters and getters for the attributes of ComputeTemperature
+  .def_property("conductivity", 
+      // Getter for the conductivity
+      [](ComputeTemperature &self) -> Real& { return self.getConductivity(); },
+      // Setter for the conductivity
+      [](ComputeTemperature &self, Real value) { self.getConductivity() = value; },
+      "Heat conductivity of the material.")
+  .def_property("capacity", 
+      // Getter for the capacity
+      [](ComputeTemperature &self) -> Real& { return self.getCapacity(); },
+      // Setter for the capacity
+      [](ComputeTemperature &self, Real value) { self.getCapacity() = value; },
+      "Heat capacity of the material.")
+  .def_property("density", 
+      // Getter for the density
+      [](ComputeTemperature &self) -> Real& { return self.getDensity(); },
+      // Setter of the density
+      [](ComputeTemperature &self, Real value) { self.getDensity() = value; },
+      "Density of the material.")
+  .def_property("L", 
+      // Getter for L
+      [](ComputeTemperature &self) -> Real& { return self.getL(); },
+      // Setter for L
+      [](ComputeTemperature &self, Real value) { self.getL() = value; },
+      "Characteristic length of the square.")
+  .def_property("deltat", 
+      // Getter for Deltat
+      [](ComputeTemperature &self) -> Real& { return self.getDeltat(); }, 
+      // Setter for Delta
+      [](ComputeTemperature &self, Real value) { self.getDeltat() = value; },
+      "Time step size for the simulation.");
 
   // ComputeGravity
   py::class_<ComputeGravity, ComputeInteraction, std::shared_ptr<ComputeGravity>>(
@@ -113,8 +149,7 @@ PYBIND11_MODULE(pypart, m) {
 	.def(py::init<>(), "Constructor for ComputeGravity")
 	// Set the gravitational constant G
   .def("setG", &ComputeGravity::setG, py::arg("G"),
-       "Set the gravitational constant G.");
-	;
+       "Set the gravitational constant G.") ;
 
   // ComputeVerletIntegration
   py::class_<ComputeVerletIntegration, Compute, std::shared_ptr<ComputeVerletIntegration>>(
