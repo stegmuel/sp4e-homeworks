@@ -51,3 +51,16 @@ python main.py 10 1 ../src/init.csv planet 1
 python main.py 10 1 ../src/init.csv material_point 1
 ```
 
+## Exercise 6
+
+Launch a trajectory simulation for 365 days and a daily update of the position:
+```
+python main.py 365 1 ../src/init.csv planet 1  
+```
+
+## Exercise 7
+Compute the error:
+```
+python compute_error.py --dumps_dir="homework4/build/dumps/" --refs_dir="homework4/build/refs/" --planet_name="mercury"
+```
+
