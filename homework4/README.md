@@ -36,3 +36,18 @@ Launch the test
 cd homework4/build
 ./test_finite_diff
 ```
+
+
+## Exercise 3
+## Exercise 4
+## Exercise 5
+
+Dummy tests:
+```
+cd homework4/build
+make
+mkdir dumps
+python main.py 10 1 ../src/init.csv planet 1
+python main.py 10 1 ../src/init.csv material_point 1
+```
+
